@@ -1,45 +1,92 @@
 from vllm import LLM, SamplingParams
+from transformers import AutoTokenizer
 import os
-from utils import find_boxed
+import json
+from lean_interact import LeanREPLConfig, LeanServer, Command, TempRequireProject
 
 
-check_prompt = """
-Here is a natural language math problem and a translation in formal language Lean 4.
-You need to carefully analyse these problems and figure out wether they are equivalent or not.
-These problems must have exactly the same conditions and conclusions.
-Mark false if they violate any requirement.
-Also reply false if the formal statement is empty or malformed.
+PROMPT = """
+Please autoformalize the following problem in Lean 4 with a header.
+Use the following theorem names: my_favorite_theorem.\n\n
+"""
 
-**Natural Language Problem**
-{nlp}
-
-```lean
-{flp}
-```
-
-State your answer as $\\boxed{{true}}$ or $\\boxed{{false}}$ at the end of your response.
+TEST_CMD = """
+import Mathlib
+theorem algebra_539177 (a : Fin 2011 → ℝ) (ha : StrictMono a)                                                                                                                         
+    (ha' : ∀ i, 0 < a i) :                                                                                                                                                
+    ∃ i j, i < j ∧ a j - a i < ((1 + a i) * (1 + a j)) / 2010 := by                                                                                                                   
+  sorry                                                                                                                                                                             
+                                                                                                                                                                                      
+theorem my_favorite_theorem (a : Fin 2011 → ℝ) (ha : StrictMono a)                                                                                                                    
+    (ha' : ∀ i, 0 < a i) :                                                                                                                                                            
+    ∃ i j, i < j ∧ a j - a i < ((1 + a i) * (1 + a j)) / 2010 := by                                                                                                                   
+  exact?
 """
 
 
-def check_consistency(translations: list[dict], model: str, sampling_p: dict) -> list[float]:
-    available_gpus = os.environ["CUDA_VISIBLE_DEVICES"].split(",")
-
+def load_model(model_name: str):
     model = LLM(
-        model=model,
-        trust_remote_code=True,
-        dtype="bfloat16",
-        tensor_parallel_size=len(available_gpus)
+        model_name
     )
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+    return model, tokenizer
 
-    sampling_params = SamplingParams(**sampling_p)
 
-    prompts = [
-       check_prompt.format(nlp=sample["nlp"], flp=sample["flp"]) for sample in translations
+def load_data(data_path: str):
+    data = []
+    with open(data_path, "rb") as f:
+        for line in f.readlines():
+            data.append(
+                json.loads(line)
+            )
+    return data
+
+
+def prepare_prompt(data: dict, tokenizer: AutoTokenizer) -> str:
+    header = data["header"]
+    problem = data["problem"]
+
+    messages = [
+        {"role": "system", "content": "You are an expert in mathematics and Lean 4."},
+        {"role": "user", "content": PROMPT + problem}
     ]
 
-    outputs = model.generate(prompts, sampling_params)
-    outputs = sorted(outputs, key=lambda x: int(x.request_id))
-    answers = [output.outputs[0].text for output in outputs]
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
 
-    consistency_results = [1.0 if find_boxed(ans) == 'true' else 0.0 for ans in answers]
-    return consistency_results
+    return text
+
+
+if __name__ == "__main__":
+    # lean 4 repl
+    config = LeanREPLConfig(project=TempRequireProject(lean_version="v4.19.0", require="mathlib"))
+    server = LeanServer(config)
+    response = server.run(Command(cmd=TEST_CMD))
+    print("Test repl response:\n", response)
+    
+    # load data
+    data_path = "datasets/formallite_combibench_proverbench.jsonl"
+    data = load_data(data_path)
+
+    # load model
+    model_name = "AI-MO/Kimina-Autoformalizer-7B"
+    model, tokenizer = load_model(model_name)
+
+    # prepare prompts
+    prompts = [prepare_prompt(sample, tokenizer) for sample in data]
+
+    # autoformalize
+    sampling_params = SamplingParams(
+        temperature=0.6,
+        top_p=0.95,
+        max_tokens=2048
+    )
+    results = model.generate(prompts, sampling_params=sampling_params)
+    formalizations = [r.outputs[0].text for r in results]
+
+    print(prompts[0])
+    print()
+    print(formalizations[0])
