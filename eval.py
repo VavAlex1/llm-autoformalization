@@ -3,6 +3,8 @@ from transformers import AutoTokenizer
 import os
 import json
 from lean_interact import LeanREPLConfig, LeanServer, Command, TempRequireProject
+from lean_interact.interface import LeanError
+from tqdm import tqdm
 
 
 PROMPT = """
@@ -60,6 +62,18 @@ def prepare_prompt(data: dict, tokenizer: AutoTokenizer) -> str:
     return text
 
 
+def check_syntax(formalization: str, server: LeanServer):
+    formalization = formalization.strip()
+    response = server.run(Command(cmd=formalization))
+    if isinstance(response, LeanError):
+        return False
+    else:
+        for message in response.messages:
+            if message.severity == "error":
+                return False
+    return True
+
+
 if __name__ == "__main__":
     # lean 4 repl
     config = LeanREPLConfig(project=TempRequireProject(lean_version="v4.19.0", require="mathlib"))
@@ -87,6 +101,8 @@ if __name__ == "__main__":
     results = model.generate(prompts, sampling_params=sampling_params)
     formalizations = [r.outputs[0].text for r in results]
 
-    print(prompts[0])
-    print()
-    print(formalizations[0])
+    # count metrics
+    count = 0
+    for formalization in tqdm(formalizations):
+        count += check_syntax(formalization, server)
+    print("pass rate: ", count / len(formalizations))
