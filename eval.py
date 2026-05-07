@@ -5,6 +5,7 @@ import json
 from lean_interact import LeanREPLConfig, LeanServer, Command, TempRequireProject
 from lean_interact.interface import LeanError
 from tqdm import tqdm
+import re
 
 
 PROMPT = """
@@ -44,8 +45,8 @@ def load_data(data_path: str):
     return data
 
 
-def prepare_prompt(data: dict, tokenizer: AutoTokenizer) -> str:
-    header = data["header"]
+def prepare_prompt(data: dict, tokenizer: AutoTokenizer):
+    header = data["header"].strip()
     problem = data["problem"]
 
     messages = [
@@ -59,19 +60,64 @@ def prepare_prompt(data: dict, tokenizer: AutoTokenizer) -> str:
         add_generation_prompt=True
     )
 
-    return text
+    prefix = header + "\n" + "theorem my_favorite_theorem "
+    prompt = text + "\n" + prefix
+
+    return prompt, prefix
+
+
+def get_formalization(output, prefix):
+    return prefix + " " + output
 
 
 def check_syntax(formalization: str, server: LeanServer):
-    formalization = formalization.strip()
-    response = server.run(Command(cmd=formalization))
-    if isinstance(response, LeanError):
+    try:
+        formalization = formalization.strip()
+        response = server.run(Command(cmd=formalization))
+        if isinstance(response, LeanError):
+            return False
+        else:
+            for message in response.messages:
+                if message.severity == "error":
+                    return False
+        return True
+    except Exception:
         return False
-    else:
-        for message in response.messages:
-            if message.severity == "error":
-                return False
-    return True
+
+
+def check_identic(
+    formalization_1,
+    formalization_2,
+    header,
+    server
+):
+    formalization_1 = formalization_1.removeprefix(header)
+    formalization_2 = formalization_2.removeprefix(header)
+
+    formalization_2 = re.sub(r':=(\s*(by)*\n*)*sorry', ':= by', formalization_2)
+    formalization_2 = formalization_2.strip()
+
+    code = header + "\n\n" + formalization_1 + "\n\n" + formalization_2 + "\n" + "exact?" + "\n"
+    response = server.run(Command(cmd=code))
+
+    for message in response.messages:
+        if message.severity == 'error':
+            return False
+        if message.severity == "info" and message.data.startswith("Try this:"):
+            return True
+    
+    return False
+    
+
+def beql(
+    formalization: str,
+    ground_truth: str,
+    header: str,
+    server: LeanServer
+):  
+    check_1 = check_identic(formalization, ground_truth, header, server)
+    check_2 = check_identic(ground_truth, formalization, header, server)
+    return check_1 and check_2
 
 
 if __name__ == "__main__":
@@ -90,8 +136,12 @@ if __name__ == "__main__":
     model, tokenizer = load_model(model_name)
 
     # prepare prompts
-    prompts = [prepare_prompt(sample, tokenizer) for sample in data]
-
+    prompts, prefixes = [], []
+    for sample in data:
+        prompt, prefix = prepare_prompt(sample, tokenizer)
+        prompts.append(prompt)
+        prefixes.append(prefix)
+    
     # autoformalize
     sampling_params = SamplingParams(
         temperature=0.6,
@@ -99,10 +149,28 @@ if __name__ == "__main__":
         max_tokens=2048
     )
     results = model.generate(prompts, sampling_params=sampling_params)
-    formalizations = [r.outputs[0].text for r in results]
 
-    # count metrics
+    # get final formalizations
+    outputs = [r.outputs[0].text for r in results]
+    formalizations = [
+        get_formalization(output, prefix) for output, prefix in zip(outputs, prefixes)
+    ]
+
+    # count syntax pass rate
     count = 0
     for formalization in tqdm(formalizations):
         count += check_syntax(formalization, server)
-    print("pass rate: ", count / len(formalizations))
+    print("syntax pass rate: ", count / len(formalizations))
+
+    # beql metric
+    count = 0
+    for formalization, sample in tqdm(zip(formalizations, data), total=len(data)):
+        gt = sample["verified_code"]
+        header = sample["header"]
+        count += beql(
+            formalization,
+            gt,
+            header,
+            server
+        )
+    print("beql pass rate: ", count / len(formalizations))
