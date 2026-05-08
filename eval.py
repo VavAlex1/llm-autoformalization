@@ -100,14 +100,27 @@ def check_identic(
     code = header + "\n\n" + formalization_1 + "\n\n" + formalization_2 + "\n" + "exact?" + "\n"
     response = server.run(Command(cmd=code))
 
+    name = extract_theorem_name(formalization_1).strip()
     for message in response.messages:
         if message.severity == 'error':
             return False
-        if message.severity == "info" and message.data.startswith("Try this:"):
+        if (
+            message.severity == "info"
+            and message.data.startswith("Try this:")
+            and name in message.data
+        ):
             return True
     
     return False
-    
+
+
+THEOREM_NAME_PATTERN = re.compile('theorem\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*')
+def extract_theorem_name(lean_code: str) -> str:
+    match = THEOREM_NAME_PATTERN.search(lean_code)
+    if match:
+        return match.group(1)
+    assert False, f"No theorem name in:\n {lean_code}"
+
 
 def beql(
     formalization: str,
@@ -162,7 +175,7 @@ if __name__ == "__main__":
         count += check_syntax(formalization, server)
     print("syntax pass rate: ", count / len(formalizations))
 
-    # beql metric
+    # count beql metric
     count = 0
     for formalization, sample in tqdm(zip(formalizations, data), total=len(data)):
         gt = sample["verified_code"]
