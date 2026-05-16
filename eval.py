@@ -91,13 +91,20 @@ def check_identic(
     header,
     server
 ):
-    formalization_1 = formalization_1.removeprefix(header)
-    formalization_2 = formalization_2.removeprefix(header)
+    formalization_1 = prepare_formalization(
+        formalization_1,
+        header,
+        add_sorry=True,
+        add_exact=False
+    )
+    formalization_2 = prepare_formalization(
+        formalization_2,
+        header,
+        add_sorry=False,
+        add_exact=True
+    )
 
-    formalization_2 = re.sub(r':=(\s*(by)*\n*)*sorry', ':= by', formalization_2)
-    formalization_2 = formalization_2.strip()
-
-    code = header + "\n\n" + formalization_1 + "\n\n" + formalization_2 + "\n" + "exact?" + "\n"
+    code = header + "\n" + formalization_1 + "\n\n" + formalization_2 + "\n"
     response = server.run(Command(cmd=code))
 
     name = extract_theorem_name(formalization_1).strip()
@@ -120,6 +127,23 @@ def extract_theorem_name(lean_code: str) -> str:
     if match:
         return match.group(1)
     assert False, f"No theorem name in:\n {lean_code}"
+
+
+def prepare_formalization(
+    formalization: str,
+    header,
+    add_sorry: bool,
+    add_exact: bool
+    ) -> str:
+    formalization = formalization.removeprefix(header)
+    formalization = formalization.rsplit(":=", 1)[0] + ":= by\n"
+
+    if add_sorry:
+        formalization += "sorry"
+    elif add_exact:
+        formalization += "exact?"
+    
+    return formalization
 
 
 def beql(
