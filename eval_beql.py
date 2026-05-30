@@ -1,12 +1,9 @@
-from datasets import load_dataset
-import os
-import json
-from lean_interact import LeanREPLConfig, LeanServer, Command, TempRequireProject
+from lean_interact import LeanREPLConfig, LeanServer, Command, TempRequireProject, AutoLeanServer
 from lean_interact.interface import LeanError
 from tqdm import tqdm
-import re
 from eval import beql
 import pandas as pd
+import argparse
 
 
 TEST_CMD = """
@@ -24,21 +21,28 @@ theorem my_favorite_theorem (a : Fin 2011 → ℝ) (ha : StrictMono a)
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("--input-data-path", type=str, required=True)
+    parser.add_argument("--output-data-path", type=str, required=True)
+    parser.add_argument("--prediction-column", type=str, default="lean4_prediction")
+
+    args = parser.parse_args()
     # lean 4 repl
     config = LeanREPLConfig(project=TempRequireProject(lean_version="v4.19.0", require="mathlib"))
-    server = LeanServer(config)
+    server = AutoLeanServer(config)
     response = server.run(Command(cmd=TEST_CMD))
     print("Test repl response:\n", response)
     
     # load dataset 
-    data_path = "benchmark_pred_processed.csv"
-    df = pd.read_csv(data_path).iloc[:100]
+    df = pd.read_csv(args.input_data_path).iloc[:100]
+    print(f"Load {df.shape[0]} samples")
 
     # prepare data
     beql_preds = []
     for _, row in tqdm(df.iterrows(), total=len(df)):
         gt = row["lean4_formalization"]
-        pred = row["answers"]
+        pred = row[args.prediction_column]
         header = row["lean4_src_header"]
 
         beql_pred = beql(
@@ -49,9 +53,11 @@ if __name__ == "__main__":
         )
         
         beql_preds.append(beql_pred)
-    
+
+    # get final metric
+    print(f"Average beql: {sum(beql_preds) / len(beql_preds)}")
+
     # save results
     df["beql"] = beql_preds
-    df.to_csv("benchmark_beql.csv", index=False)
-#    ds_test = ds_test.add_column("beql", beql_preds)
-#    ds_test.to_csv("beql_result.csv", index=False)
+    df.to_csv(args.output_data_path, index=False)
+    print(f"Save result to {args.output_data_path}")

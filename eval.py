@@ -107,7 +107,11 @@ def check_identic(
     code = header + "\n" + formalization_1 + "\n\n" + formalization_2 + "\n"
     response = server.run(Command(cmd=code))
 
-    name = extract_theorem_name(formalization_1).strip()
+    name = extract_theorem_name(formalization_1)
+
+    if name is None:
+        return False
+    
     for message in response.messages:
         if message.severity == 'error':
             return False
@@ -121,12 +125,16 @@ def check_identic(
     return False
 
 
-THEOREM_NAME_PATTERN = re.compile('theorem\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*')
-def extract_theorem_name(lean_code: str) -> str:
+THEOREM_NAME_PATTERN = re.compile(
+    r"theorem\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*"
+)
+def extract_theorem_name(lean_code: str) -> str | None:
     match = THEOREM_NAME_PATTERN.search(lean_code)
+
     if match:
         return match.group(1)
-    assert False, f"No theorem name in:\n {lean_code}"
+
+    return None
 
 
 def prepare_formalization(
