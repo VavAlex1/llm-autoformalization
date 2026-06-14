@@ -16,7 +16,7 @@ from sklearn.metrics import (
 from lean_utils import (
     DEFAULT_LEAN_VERSION,
     DEFAULT_TIMEOUT,
-    is_well_typed,
+    beq_plus,
     make_lean_config,
     map_metric,
 )
@@ -27,19 +27,21 @@ DEFAULT_DATASET = "AlexVav01/autoformalization-bench"
 # --------------------------------------------------------------------------- #
 # Метрика
 # --------------------------------------------------------------------------- #
-def typecheck_metric(
+def beq_plus_metric(
     record: dict,
     server,
+    formalization_column: str,
     prediction_column: str,
     header_column: str,
     timeout: int,
 ) -> bool:
-    """Метрика для `map_metric`: типизируется ли предсказанная формализация."""
-    return is_well_typed(
+    """Метрика для `map_metric`: эквивалентны ли эталон и предсказание по BEq+."""
+    return beq_plus(
+        record[formalization_column],
         record[prediction_column],
         record[header_column],
         server,
-        timeout=timeout,
+        timeout_per_proof=timeout,
     )
 
 
@@ -60,7 +62,6 @@ def load_records(dataset: str, split: str, required_columns: list[str]) -> list[
             )
         records = df.to_dict("records")
     else:
-        # трактуем как идентификатор датасета на HuggingFace Hub
         from datasets import load_dataset
 
         ds = load_dataset(dataset, split=split)
@@ -86,10 +87,10 @@ def report(y_true: list[int], y_pred: list[int]) -> None:
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
 
     print("\n" + "=" * 48)
-    print("typecheck как предиктор человеческой метки `correct`")
+    print("BEq+ как предиктор человеческой метки `correct`")
     print("=" * 48)
     print(f"Примеров:               {n}")
-    print(f"Доля проходящих typecheck: {sum(y_pred) / n:.2%}")
+    print(f"Доля эквивалентных (BEq+): {sum(y_pred) / n:.2%}")
     print(f"Доля корректных (人):      {sum(y_true) / n:.2%}")
     print("-" * 48)
     print(f"Accuracy:  {accuracy_score(y_true, y_pred):.2%}")
@@ -97,7 +98,7 @@ def report(y_true: list[int], y_pred: list[int]) -> None:
     print(f"Recall:    {recall_score(y_true, y_pred, zero_division=0):.2%}")
     print(f"F1:        {f1_score(y_true, y_pred, zero_division=0):.2%}")
     print("-" * 48)
-    print("Матрица ошибок (строки — истина, столбцы — typecheck):")
+    print("Матрица ошибок (строки — истина, столбцы — BEq+):")
     print(f"                pred=0   pred=1")
     print(f"  true=0 (incor) {tn:>6}   {fp:>6}")
     print(f"  true=1 (corr)  {fn:>6}   {tp:>6}")
@@ -108,7 +109,7 @@ def report(y_true: list[int], y_pred: list[int]) -> None:
 # main
 # --------------------------------------------------------------------------- #
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Typecheck-оценка формализаций в Lean 4.")
+    parser = argparse.ArgumentParser(description="BEq+-оценка формализаций в Lean 4.")
     parser.add_argument(
         "--dataset",
         type=str,
@@ -121,8 +122,9 @@ def main() -> None:
         default=4,
         help="Число параллельных Lean-серверов (ограничено объёмом RAM).",
     )
-    # ниже — необязательные параметры с разумными значениями по умолчанию
+    # необязательные параметры с разумными значениями по умолчанию
     parser.add_argument("--split", type=str, default="test", help="Сплит HF-датасета.")
+    parser.add_argument("--formalization-column", type=str, default="lean4_formalization")
     parser.add_argument("--prediction-column", type=str, default="lean4_prediction")
     parser.add_argument("--header-column", type=str, default="lean4_src_header")
     parser.add_argument("--label-column", type=str, default="correct")
@@ -140,7 +142,12 @@ def main() -> None:
     records = load_records(
         args.dataset,
         args.split,
-        required_columns=[args.prediction_column, args.header_column, args.label_column],
+        required_columns=[
+            args.formalization_column,
+            args.prediction_column,
+            args.header_column,
+            args.label_column,
+        ],
     )
     print(f"Загружено {len(records)} примеров из {args.dataset!r}")
 
@@ -148,20 +155,21 @@ def main() -> None:
     print(f"Готовим Lean {args.lean_version} + Mathlib (первый запуск долгий)...")
     config = make_lean_config(lean_version=args.lean_version, verbose=True)
 
-    # 3. прогон typecheck по всем примерам
+    # 3. прогон BEq+ по всем примерам
     metric = functools.partial(
-        typecheck_metric,
+        beq_plus_metric,
+        formalization_column=args.formalization_column,
         prediction_column=args.prediction_column,
         header_column=args.header_column,
         timeout=args.timeout,
     )
-    print(f"Запускаем typecheck в {args.num_processes} процессов...")
+    print(f"Запускаем BEq+ в {args.num_processes} процессов...")
     preds = map_metric(
         records,
         metric,
         config,
         num_processes=args.num_processes,
-        desc="typecheck",
+        desc="beq_plus",
     )
 
     # 4. метрики против человеческой разметки
@@ -172,7 +180,7 @@ def main() -> None:
     # 5. (опционально) сохранить разбор по примерам
     if args.output:
         df = pd.DataFrame(records)
-        df["typecheck"] = y_pred
+        df["beq_plus"] = y_pred
         df["correct_label"] = y_true
         df.to_csv(args.output, index=False)
         print(f"Результаты по примерам сохранены в {args.output}")

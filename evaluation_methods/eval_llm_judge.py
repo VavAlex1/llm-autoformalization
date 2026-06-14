@@ -1,18 +1,10 @@
-#!/usr/bin/env python3
 """
-LLM-as-a-judge для оценки автоформализации на датасете ProofNetVerif.
+LLM-as-a-judge для оценки автоформализации.
 
-Скрипт прогоняет выбранную модель (через OpenRouter) как судью: для каждого
+Скрипт прогоняет выбранную модель как судью: для каждого
 примера он решает, является ли `lean4_prediction` корректной (семантически
 эквивалентной) формализацией `nl_statement`. На выходе — CSV с предсказаниями,
 а в конце печатается, насколько судья совпал с эталонной разметкой `correct`.
-
-Запуск:
-    pip install openai datasets pandas
-    export OPENROUTER_API_KEY=...
-    python judge_formalization.py --model "google/gemini-2.0-flash-001"
-    python judge_formalization.py --model "..." --samples 3 --voting unanimous
-    python judge_formalization.py --model "..." --workers 16
 """
 
 import argparse
@@ -20,14 +12,13 @@ import os
 import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
 import pandas as pd
 from datasets import load_dataset
 from openai import OpenAI
 
 DATASET = "AlexVav01/autoformalization-bench"
 
-# --- Промпт судьи (на английском — обычно даёт качество выше) --------------- #
+# Промпт судьи
 SYSTEM_PROMPT = """\
 You are a meticulous expert in Lean 4, Mathlib, and formal mathematics, acting \
 as a strict grader of autoformalization.
@@ -65,17 +56,17 @@ VERDICT: INCORRECT
 USER_TEMPLATE = """\
 # Natural-language statement
 {nl}
-
+{header_block}
 # Reference Lean 4 formalization (known correct)
 ```lean
 {ref}
 ```
-
+ 
 # Candidate Lean 4 formalization (to be judged)
 ```lean
 {cand}
 ```
-
+ 
 Is the candidate a correct (semantically equivalent) formalization of the
 natural-language statement? Reason briefly, then end with the VERDICT line."""
 
@@ -123,13 +114,20 @@ def judge_one(client, model, row, samples, temperature, voting):
       - полная_генерация: все ответы судьи (при samples>1 — склеены).
     """
     cand = (row.get("lean4_prediction") or "").strip()
+    header = (row.get("lean4_src_header") or "").strip()
+    header_block = (
+        f"\n# Lean 4 header (imports / opens, shared by both)\n"
+        f"```lean\n{header}\n```\n" if header else ""
+    )
     user_content = USER_TEMPLATE.format(
         nl=(row.get("nl_statement") or "").strip(),
+        header_block=header_block,
         ref=(row.get("lean4_formalization") or "").strip(),
-        cand=cand)
+        cand=cand
+    )
     prompt_text = f"[SYSTEM]\n{SYSTEM_PROMPT}\n[USER]\n{user_content}"
 
-    if not cand:                      # пустой кандидат сразу некорректен
+    if not cand:
         return False, prompt_text, "<empty prediction — API call skipped>"
 
     messages = [
@@ -140,7 +138,7 @@ def judge_one(client, model, row, samples, temperature, voting):
     for k in range(samples):
         resp = client.chat.completions.create(
             model=model, messages=messages,
-            temperature=temperature, max_tokens=4096)
+            temperature=temperature, max_tokens=8192)
         out = resp.choices[0].message.content or ""
         verdicts.append(parse_verdict(out))
         outputs.append(out if samples == 1 else f"--- sample {k + 1} ---\n{out}")
@@ -206,7 +204,7 @@ def main():
     temperature = 0.0 if args.samples == 1 else 0.6
 
     print(f"Загружаю {DATASET} [test]…")
-    rows = list(load_dataset(DATASET, split="test"))[:100]
+    rows = list(load_dataset(DATASET, split="test"))
     print(f"Примеров: {len(rows)}. Прогоняю '{args.model}' в {args.workers} потоков…")
 
     # judge_one потокобезопасна (только читает аргументы), поэтому запускаем пул.
