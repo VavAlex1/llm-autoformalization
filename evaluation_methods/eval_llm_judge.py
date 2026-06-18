@@ -13,7 +13,6 @@ import re
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import pandas as pd
-from datasets import load_dataset
 from openai import OpenAI
 
 DATASET = "AlexVav01/autoformalization-bench"
@@ -69,6 +68,38 @@ USER_TEMPLATE = """\
  
 Is the candidate a correct (semantically equivalent) formalization of the
 natural-language statement? Reason briefly, then end with the VERDICT line."""
+
+
+# --- Загрузка датасета (HuggingFace id или локальный csv/jsonl/json) -------- #
+def load_records(dataset, split, required_columns):
+    if os.path.exists(dataset):
+        if dataset.endswith(".csv"):
+            df = pd.read_csv(dataset)
+        elif dataset.endswith(".jsonl"):
+            df = pd.read_json(dataset, lines=True)
+        elif dataset.endswith(".json"):
+            df = pd.read_json(dataset)
+        else:
+            raise ValueError(
+                f"Неизвестный формат локального файла: {dataset} (ожидался .csv/.jsonl/.json)"
+            )
+        records = df.to_dict("records")
+    else:
+        from datasets import load_dataset
+
+        ds = load_dataset(dataset, split=split)
+        records = [dict(row) for row in ds]
+
+    if not records:
+        raise ValueError("Датасет пуст.")
+
+    missing = [c for c in required_columns if c not in records[0]]
+    if missing:
+        raise KeyError(
+            f"В датасете нет нужных колонок: {missing}. "
+            f"Доступные: {sorted(records[0].keys())}"
+        )
+    return records
 
 
 # --- Вспомогательные функции ----------------------------------------------- #
@@ -185,6 +216,11 @@ def progress_iter(futures_as_completed, total):
 def main():
     parser = argparse.ArgumentParser(description="LLM-судья для ProofNetVerif.")
     parser.add_argument("--model", required=True, help="id модели в OpenRouter")
+    parser.add_argument(
+        "--dataset", default=DATASET,
+        help="HuggingFace id или путь к локальному .csv/.jsonl/.json "
+             "(по умолчанию ProofNetVerif).")
+    parser.add_argument("--split", default="test", help="Сплит HF-датасета.")
     parser.add_argument("--samples", type=int, default=1,
                         help="сколько раз опрашивать судью на один пример")
     parser.add_argument("--voting", choices=["majority", "unanimous"],
@@ -203,8 +239,16 @@ def main():
     # температура: 0 для одного прогона, иначе включаем разнообразие для голосования
     temperature = 0.0 if args.samples == 1 else 0.6
 
-    print(f"Загружаю {DATASET} [test]…")
-    rows = list(load_dataset(DATASET, split="test"))
+    print(f"Загружаю {args.dataset!r} [{args.split}]…")
+    rows = load_records(
+        args.dataset,
+        args.split,
+        required_columns=[
+            "nl_statement",
+            "lean4_formalization",
+            "lean4_prediction",
+        ],
+    )
     print(f"Примеров: {len(rows)}. Прогоняю '{args.model}' в {args.workers} потоков…")
 
     # judge_one потокобезопасна (только читает аргументы), поэтому запускаем пул.
