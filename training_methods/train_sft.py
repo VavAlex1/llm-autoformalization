@@ -56,7 +56,7 @@ def build_user_prompt(nl_statement: str, header: str) -> str:
         "Please autoformalize the following problem in Lean 4 with a header. "
         f"Use the following theorem names: {THEOREM_NAME}.\n\n"
         f"{nl_statement}\n\n"
-        f"Your code should start with a header:\n```lean4\n{header}\n```\n"
+        f"Your code should start with:\n```lean4\n{header}\n```\n"
     )
 
 
@@ -115,13 +115,13 @@ def prepare_split(ds, nl_col, header_col, formal_col):
 # --------------------------------------------------------------------------- #
 # Callback: генерация на eval + BEq+
 # --------------------------------------------------------------------------- #
-class BEqPlusCallback(TrainerCallback):
-    """Раз в eval_steps генерирует формализации и считает долю BEq+-эквивалентных."""
+class LeanEvalCallback(TrainerCallback):
+    """Раз в eval_steps генерирует формализации и считает Lean-метрики (typecheck, BEq+)."""
 
-    def __init__(self, tokenizer, eval_rows, lean_config, beq_metric, args):
+    def __init__(self, tokenizer, eval_rows, lean_config, metrics, args):
         self.tok = tokenizer
         self.lean_config = lean_config
-        self.beq_metric = beq_metric          # functools.partial(beq_plus-обёртка)
+        self.metrics = metrics                 # {"typecheck": fn, "beq_plus": fn}
         self.map_metric = args._map_metric     # из lean_utils
         self.num_processes = args.beq_num_processes
         self.gen_batch_size = args.gen_batch_size
@@ -182,7 +182,7 @@ class BEqPlusCallback(TrainerCallback):
         return preds
 
     def on_evaluate(self, args, state, control, model=None, **kwargs):
-        # генерим и считаем BEq+ только на главном процессе
+        # генерим и считаем Lean-метрики только на главном процессе
         if not state.is_world_process_zero:
             return
 
@@ -193,34 +193,52 @@ class BEqPlusCallback(TrainerCallback):
             pred = strip_header(extract_lean(raw), header)
             records.append({"gold": gold, "pred": pred, "header": header})
 
-        try:
-            flags = self.map_metric(
-                records,
-                self.beq_metric,
-                self.lean_config,
-                num_processes=self.num_processes,
-                desc="beq_plus",
-            )
-            rate = sum(bool(f) for f in flags) / len(flags)
-        except Exception as e:  # Lean-проблемы не должны валить обучение
-            print(f"[BEq+] ошибка во время оценки: {e}")
-            return
+        logs = {}
+        for name, metric in self.metrics.items():
+            try:
+                flags = self.map_metric(
+                    records,
+                    metric,
+                    self.lean_config,
+                    num_processes=self.num_processes,
+                    desc=name,
+                )
+                rate = sum(bool(f) for f in flags) / len(flags)
+            except Exception as e:  # Lean-проблемы не должны валить обучение
+                print(f"[{name}] ошибка во время оценки: {e}")
+                continue
+            logs[f"eval_{name}"] = rate
+            print(f"[{name}] step {state.global_step}: {rate:.2%}")
 
-        print(f"[BEq+] step {state.global_step}: {rate:.2%} эквивалентных")
-        if self.trainer is not None:
-            self.trainer.log({"eval_beq_plus": rate})
+        if logs and self.trainer is not None:
+            self.trainer.log(logs)  # уйдёт в т.ч. в wandb на текущем шаге
 
         # дублируем в jsonl рядом с чекпойнтами
-        os.makedirs(self.output_dir, exist_ok=True)
-        with open(os.path.join(self.output_dir, "beq_plus.jsonl"), "a") as f:
-            f.write(json.dumps({"step": state.global_step, "beq_plus": rate}) + "\n")
+        if logs:
+            os.makedirs(self.output_dir, exist_ok=True)
+            with open(os.path.join(self.output_dir, "lean_eval.jsonl"), "a") as f:
+                f.write(json.dumps({"step": state.global_step, **logs}) + "\n")
+
+
+# метрики для map_metric — на уровне модуля, иначе multiprocessing их не запиклит
+def _typecheck_metric(record, server, timeout):
+    from lean_utils import is_well_typed
+    return is_well_typed(record["pred"], record["header"], server, timeout=timeout)
+
+
+def _beq_metric(record, server, timeout):
+    from lean_utils import beq_plus
+    return beq_plus(
+        record["gold"], record["pred"], record["header"], server,
+        timeout_per_proof=timeout,
+    )
 
 
 # --------------------------------------------------------------------------- #
 # main
 # --------------------------------------------------------------------------- #
 def main() -> None:
-    p = argparse.ArgumentParser(description="SFT автоформализатора с BEq+ валидацией.")
+    p = argparse.ArgumentParser(description="SFT автоформализатора с typecheck/BEq+ валидацией.")
     # данные / модель
     p.add_argument("--dataset", required=True, help="HF repo id со сплитами train/eval.")
     p.add_argument("--model", default="Qwen/Qwen2.5-Coder-7B-Instruct")
@@ -235,21 +253,32 @@ def main() -> None:
     p.add_argument("--lr", type=float, default=1e-5)
     p.add_argument("--per-device-batch-size", type=int, default=1)
     p.add_argument("--grad-accum", type=int, default=8)
-    p.add_argument("--max-length", type=int, default=2048)
+    p.add_argument("--max-length", type=int, default=4096)
     p.add_argument("--warmup-ratio", type=float, default=0.03)
-    p.add_argument("--logging-steps", type=int, default=20)
-    p.add_argument("--eval-steps", type=int, default=400, help="Каждые N шагов: loss + BEq+.")
-    p.add_argument("--save-steps", type=int, default=400)
+    p.add_argument("--logging-steps", type=int, default=25)
+    p.add_argument("--eval-steps", type=int, default=1000,
+                   help="Каждые N шагов: loss + Lean-метрики (typecheck, BEq+).")
+    p.add_argument("--save-total-limit", type=int, default=1,
+                   help="Сколько чекпойнтов эпох держать на диске.")
     # генерация на eval
-    p.add_argument("--gen-batch-size", type=int, default=16)
-    p.add_argument("--gen-max-new-tokens", type=int, default=512)
-    p.add_argument("--gen-max-prompt-len", type=int, default=1024)
-    # BEq+
-    p.add_argument("--no-beq", action="store_true", help="Только loss, без BEq+.")
-    p.add_argument("--beq-num-processes", type=int, default=4)
+    p.add_argument("--gen-batch-size", type=int, default=8)
+    p.add_argument("--gen-max-new-tokens", type=int, default=2048)
+    p.add_argument("--gen-max-prompt-len", type=int, default=2048)
+    # Lean-метрики (typecheck + BEq+) через lean_utils
+    p.add_argument("--no-lean-eval", action="store_true",
+                   help="Только loss, без typecheck/BEq+.")
+    p.add_argument("--beq-num-processes", type=int, default=10)
     p.add_argument("--beq-timeout", type=int, default=None, help="timeout_per_proof (сек).")
     p.add_argument("--lean-version", type=str, default=None)
+    # wandb
+    p.add_argument("--wandb", action="store_true", help="Логировать в Weights & Biases.")
+    p.add_argument("--wandb-project", type=str, default="autoformalization-sft")
+    p.add_argument("--run-name", type=str, default=None)
+    
     args = p.parse_args()
+
+    if args.wandb:
+        os.environ["WANDB_PROJECT"] = args.wandb_project
 
     # 1. данные
     ds = load_dataset(args.dataset)
@@ -260,17 +289,21 @@ def main() -> None:
     train_ds = prepare_split(
         train_raw, args.nl_column, args.header_column, args.formalization_column
     )
+    train_ds = train_ds.shuffle(seed=42)
     eval_ds = prepare_split(
         eval_raw, args.nl_column, args.header_column, args.formalization_column
     )
+    eval_ds = eval_ds.shuffle(seed=42)
 
     # 2. модель и токенайзер
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(args.model, torch_dtype=torch.bfloat16)
-    model.config.use_cache = False  # совместимо с gradient checkpointing
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model,
+        torch_dtype=torch.bfloat16
+    )
 
     # 3. конфиг SFT (лосс только на completion — это поведение по умолчанию TRL
     #    для prompt/completion формата)
@@ -283,26 +316,26 @@ def main() -> None:
         per_device_train_batch_size=args.per_device_batch_size,
         per_device_eval_batch_size=args.per_device_batch_size,
         gradient_accumulation_steps=args.grad_accum,
-        gradient_checkpointing=True,
-        gradient_checkpointing_kwargs={"use_reentrant": False},
-        bf16=True,
         max_length=args.max_length,
         logging_steps=args.logging_steps,
+        gradient_checkpointing=False,
+        bf16=True,
         eval_strategy="steps",
         eval_steps=args.eval_steps,
-        save_strategy="steps",
-        save_steps=args.save_steps,
-        report_to="none",
+        save_strategy="epoch",
+        save_only_model=True,
+        save_total_limit=args.save_total_limit,
+        report_to=("wandb" if args.wandb else "none"),
+        run_name=args.run_name
     )
 
-    # 4. BEq+ callback (через lean_utils, как в eval_beq_plus.py)
+    # 4. Lean-метрики на eval: typecheck + BEq+ (через lean_utils)
     callbacks = []
-    beq_cb = None
-    if not args.no_beq:
+    lean_cb = None
+    if not args.no_lean_eval:
         from lean_utils import (
             DEFAULT_LEAN_VERSION,
             DEFAULT_TIMEOUT,
-            beq_plus,
             make_lean_config,
             map_metric,
         )
@@ -312,15 +345,14 @@ def main() -> None:
         print(f"Готовим Lean {lean_version} + Mathlib (первый запуск долгий)...")
         lean_config = make_lean_config(lean_version=lean_version, verbose=True)
 
-        def beq_metric(record, server, _timeout=timeout):
-            return beq_plus(
-                record["gold"], record["pred"], record["header"], server,
-                timeout_per_proof=_timeout,
-            )
+        metrics = {
+            "typecheck": functools.partial(_typecheck_metric, timeout=timeout),
+            "beq_plus": functools.partial(_beq_metric, timeout=timeout),
+        }
 
         args._map_metric = map_metric
-        beq_cb = BEqPlusCallback(tokenizer, list(eval_raw), lean_config, beq_metric, args)
-        callbacks.append(beq_cb)
+        lean_cb = LeanEvalCallback(tokenizer, list(eval_raw), lean_config, metrics, args)
+        callbacks.append(lean_cb)
 
     # 5. тренер
     trainer = SFTTrainer(
@@ -331,8 +363,8 @@ def main() -> None:
         processing_class=tokenizer,
         callbacks=callbacks,
     )
-    if beq_cb is not None:
-        beq_cb.trainer = trainer  # чтобы BEq+ логировался вместе с остальными метриками
+    if lean_cb is not None:
+        lean_cb.trainer = trainer  # чтобы Lean-метрики логировались вместе с остальными
 
     # 6. обучение
     trainer.train()
