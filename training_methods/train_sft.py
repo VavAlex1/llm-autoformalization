@@ -249,16 +249,16 @@ def main() -> None:
     p.add_argument("--header-column", default="lean4_src_header")
     p.add_argument("--formalization-column", default="lean4_formalization")
     # обучение
-    p.add_argument("--epochs", type=float, default=1.0)
-    p.add_argument("--lr", type=float, default=1e-5)
-    p.add_argument("--per-device-batch-size", type=int, default=1)
-    p.add_argument("--grad-accum", type=int, default=8)
-    p.add_argument("--max-length", type=int, default=4096)
+    p.add_argument("--epochs", type=float, default=2.0)
+    p.add_argument("--lr", type=float, default=3e-5)
+    p.add_argument("--per-device-batch-size", type=int, default=2)
+    p.add_argument("--grad-accum", type=int, default=4)
+    p.add_argument("--max-length", type=int, default=2048)
     p.add_argument("--warmup-ratio", type=float, default=0.03)
     p.add_argument("--logging-steps", type=int, default=25)
-    p.add_argument("--eval-steps", type=int, default=1000,
+    p.add_argument("--eval-steps", type=int, default=800,
                    help="Каждые N шагов: loss + Lean-метрики (typecheck, BEq+).")
-    p.add_argument("--save-total-limit", type=int, default=1,
+    p.add_argument("--save-total-limit", type=int, default=2,
                    help="Сколько чекпойнтов эпох держать на диске.")
     # генерация на eval
     p.add_argument("--gen-batch-size", type=int, default=8)
@@ -304,6 +304,7 @@ def main() -> None:
         args.model,
         torch_dtype=torch.bfloat16
     )
+    model.config.use_cache = False
 
     # 3. конфиг SFT (лосс только на completion — это поведение по умолчанию TRL
     #    для prompt/completion формата)
@@ -318,7 +319,8 @@ def main() -> None:
         gradient_accumulation_steps=args.grad_accum,
         max_length=args.max_length,
         logging_steps=args.logging_steps,
-        gradient_checkpointing=False,
+        gradient_checkpointing=True,
+        gradient_checkpointing_kwargs={"use_reentrant": False},
         bf16=True,
         eval_strategy="steps",
         eval_steps=args.eval_steps,
