@@ -1,0 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cu126
+
+torch==2.12.1+cu126
+torchvision==0.27.1+cu126
+torchaudio==2.12.1+cu126
+trl==1.6.0
+lean-interact==0.11.2
