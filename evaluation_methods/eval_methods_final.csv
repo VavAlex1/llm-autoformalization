@@ -310,7 +310,7 @@ open scoped BigOperators Topology
 
 ","theorem exercise_3_14 {f : ℂ → ℂ} (hf : Differentiable ℂ f)
     (hf_inj : Function.Injective f) :
-    ∃ (a b : ℂ), f = (λ z => a * z + b) ∧ a ≠ 0 :=","theorem dummy {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f) (hf_injective : Function.Injective f) : ∃ (a b : ℂ), a ≠ 0 ∧ ∀ z, f z = a * z + b := sorry",True,0,1,1,0,True,True,True
+    ∃ (a b : ℂ), f = (λ z => a * z + b) ∧ a ≠ 0 :=","theorem dummy {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f) (hf_injective : Function.Injective f) : ∃ (a b : ℂ), a ≠ 0 ∧ ∀ z, f z = a * z + b := sorry",True,0,1,1,1,True,True,True
 Rudin|exercise_1_1b,"If $r$ is rational $(r \neq 0)$ and $x$ is irrational, prove that $rx$ is irrational.","import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -320,7 +320,7 @@ open scoped BigOperators
 (x : ℝ)
 (y : ℚ)
 (h : y ≠ 0)
-: ( Irrational x ) -> Irrational ( x * y ) :=",theorem dummy {x : ℝ} (hx : Irrational x) (r : ℚ) (hr : r ≠ 0) : Irrational (r * x) := sorry,True,0,1,1,0,True,True,True
+: ( Irrational x ) -> Irrational ( x * y ) :=",theorem dummy {x : ℝ} (hx : Irrational x) (r : ℚ) (hr : r ≠ 0) : Irrational (r * x) := sorry,True,0,1,1,1,True,True,True
 Shakarchi|exercise_1_19c,Prove that the power series $\sum z^n/n$ converges at every point of the unit circle except $z = 1$.,"import Mathlib
 
 open Complex Filter Function Metric Finset
@@ -489,7 +489,7 @@ open Fintype Subgroup Set Polynomial Ideal
 open scoped BigOperators
 
 ","theorem exercise_4_4_6b :
-  ∃ (G : Type*) (hG : Group G) (H : @Subgroup G hG), @Normal G hG H ∧ ¬ @Characteristic G hG H :=","theorem dummy (G : Type*) [Group G] : ∃ (N : Subgroup G), Normal N ∧ ¬Characteristic N := sorry",True,0,1,1,0,False,False,False
+  ∃ (G : Type*) (hG : Group G) (H : @Subgroup G hG), @Normal G hG H ∧ ¬ @Characteristic G hG H :=","theorem dummy (G : Type*) [Group G] : ∃ (N : Subgroup G), Normal N ∧ ¬Characteristic N := sorry",True,0,1,1,1,False,False,False
 Putnam|exercise_2014_a5,Let $P_n(x)=1+2 x+3 x^2+\cdots+n x^{n-1} .$ Prove that the polynomials $P_j(x)$ and $P_k(x)$ are relatively prime for all positive integers $j$ and $k$ with $j \neq k$.,"import Mathlib
 
 open scoped BigOperators
@@ -1092,7 +1092,7 @@ open scoped BigOperators Topology
 
 ","theorem exercise_1_19a (z : ℂ) (hz : abs z = 1) (s : ℕ → ℂ)
     (h : s = (λ n => ∑ i in (range n), i * z ^ i)) :
-    ¬ ∃ y, Tendsto s atTop (𝓝 y) :=","theorem dummy : ∀ z : ℂ, abs z = 1 → Summable (fun n => n • z ^ n) → False := sorry",True,0,1,0,0,True,True,True
+    ¬ ∃ y, Tendsto s atTop (𝓝 y) :=","theorem dummy : ∀ z : ℂ, abs z = 1 → Summable (fun n => n • z ^ n) → False := sorry",True,0,1,0,1,True,True,True
 Axler|exercise_5_13,Suppose $T \in \mathcal{L}(V)$ is such that every subspace of $V$ with dimension $\operatorname{dim} V-1$ is invariant under $T$. Prove that $T$ is a scalar multiple of the identity operator.,"import Mathlib
 
 open Fintype Complex Polynomial LinearMap FiniteDimensional Module Module.End
@@ -1108,7 +1108,7 @@ open Real
 open scoped BigOperators
 
 ","theorem exercise_5_28 {p : ℕ} (hp : p.Prime) (hp1 : p ≡ 1 [MOD 4]):
-  (∃ x, x^4 ≡ 2 [MOD p]) ↔ ∃ A B, p = A^2 + 64*B^2 :=","theorem dummy {p : ℕ} [hp : Fact p.Prime] (hp1 : p % 4 = 1) : (∃ x : ℕ, x^4 % p = 2) ↔ ∃ A B : ℤ, p = A^2 + 64 * B^2 := sorry",True,0,1,1,0,True,True,True
+  (∃ x, x^4 ≡ 2 [MOD p]) ↔ ∃ A B, p = A^2 + 64*B^2 :=","theorem dummy {p : ℕ} [hp : Fact p.Prime] (hp1 : p % 4 = 1) : (∃ x : ℕ, x^4 % p = 2) ↔ ∃ A B : ℤ, p = A^2 + 64 * B^2 := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_1_1_4,Prove that the multiplication of residue class $\mathbb{Z}/n\mathbb{Z}$ is associative.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -1176,7 +1176,7 @@ open scoped BigOperators
 ","theorem exercise_1_6_23 {G : Type*}
   [Group G] (σ : MulAut G) (hs : ∀ g : G, σ g = g ↔ g = 1)
   (hs2 : ∀ g : G, σ (σ g) = g) :
-  ∀ x y : G, x*y = y*x :=","theorem dummy {G : Type*} [Group G] [Fintype G] (σ : G ≃* G) (hσ : ∀ g : G, σ g = g ↔ g = 1) (hσ2 : ∀ g : G, σ (σ g) = g) : ∀ a b : G, a * b = b * a := sorry",True,0,1,1,0,True,True,True
+  ∀ x y : G, x*y = y*x :=","theorem dummy {G : Type*} [Group G] [Fintype G] (σ : G ≃* G) (hσ : ∀ g : G, σ g = g ↔ g = 1) (hσ2 : ∀ g : G, σ (σ g) = g) : ∀ a b : G, a * b = b * a := sorry",True,0,1,1,1,True,True,True
 Munkres|exercise_28_6,"Let $(X, d)$ be a metric space. If $f: X \rightarrow X$ satisfies the condition $d(f(x), f(y))=d(x, y)$ for all $x, y \in X$, then $f$ is called an isometry of $X$. Show that if $f$ is an isometry and $X$ is compact, then $f$ is bijective and hence a homeomorphism.","import Mathlib
 
 open Filter Set TopologicalSpace Function
@@ -1321,7 +1321,7 @@ open scoped BigOperators
 ","theorem exercise_2_29 (U : Set ℝ) (hU : IsOpen U) :
   ∃ (f : ℕ → Set ℝ), (∀ n, ∃ a b : ℝ, f n = {x | a < x ∧ x < b}) ∧ (∀ n, f n ⊆ U) ∧
   (∀ n m, n ≠ m → f n ∩ f m = ∅) ∧
-  U = ⋃ n, f n :=","theorem dummy (U : Set ℝ) (hU : IsOpen U) : ∃ (S : Set (Set ℝ)), (∀ s ∈ S, ∃ a b : ℝ, s = Set.Ioo a b ∧ a < b) ∧ (U = ⋃₀ S) ∧ (Countable S) ∧ (Pairwise (Disjoint on S)) := sorry",True,0,1,0,0,False,False,False
+  U = ⋃ n, f n :=","theorem dummy (U : Set ℝ) (hU : IsOpen U) : ∃ (S : Set (Set ℝ)), (∀ s ∈ S, ∃ a b : ℝ, s = Set.Ioo a b ∧ a < b) ∧ (U = ⋃₀ S) ∧ (Countable S) ∧ (Pairwise (Disjoint on S)) := sorry",True,0,1,0,1,False,False,False
 Pugh|exercise_2_32a,Show that every subset of $\mathbb{N}$ is clopen.,"import Mathlib
 
 open Filter Real Function
@@ -1463,7 +1463,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_5_13 {G : Type*} [Group G] [Fintype G]
   (hG : card G = 56) :
-  ∃ (p : ℕ) (P : Sylow p G), p.Prime ∧ (p ∣ card G) ∧ P.Normal :=","theorem dummy {G : Type*} [Group G] [Fintype G] (hG : Fintype.card G = 56) : ∃ (p : ℕ) (hp : Nat.Prime p) (H : Sylow p G), H.Normal := sorry",True,0,1,1,0,True,False,False
+  ∃ (p : ℕ) (P : Sylow p G), p.Prime ∧ (p ∣ card G) ∧ P.Normal :=","theorem dummy {G : Type*} [Group G] [Fintype G] (hG : Fintype.card G = 56) : ∃ (p : ℕ) (hp : Nat.Prime p) (H : Sylow p G), H.Normal := sorry",True,0,1,1,1,True,False,False
 Putnam|exercise_2018_b4,"Given a real number $a$, we define a sequence by $x_{0}=1$, $x_{1}=x_{2}=a$, and $x_{n+1}=2 x_{n} x_{n-1}-x_{n-2}$ for $n \geq 2$. Prove that if $x_{n}=0$ for some $n$, then the sequence is periodic.","import Mathlib
 
 open scoped BigOperators
@@ -1517,7 +1517,7 @@ open Fintype Set Real Ideal Polynomial
 open scoped BigOperators
 
 ","theorem exercise_4_2_6 {R : Type*} [Ring R] (a x : R)
-  (h : a ^ 2 = 0) : a * (a * x + x * a) = (a * x + x * a) * a :=","theorem dummy {R : Type*} [Ring R] (ha : a ^ 2 = 0) : ∀ x : R, Commute (a * x + x * a) a := sorry",True,0,1,1,0,False,False,True
+  (h : a ^ 2 = 0) : a * (a * x + x * a) = (a * x + x * a) * a :=","theorem dummy {R : Type*} [Ring R] (ha : a ^ 2 = 0) : ∀ x : R, Commute (a * x + x * a) a := sorry",True,0,1,1,1,False,False,True
 brualdi_ch6_21,Prove that $D_{n}$ is an even number if and only if $n$ is an odd number.,import Mathlib,theorem brualdi_ch6_21 (n : ℕ) : Even (numDerangements n) ↔ Odd n := by sorry,theorem brualdi_ch6_21 (n : ℕ) : Odd (numDerangements n) ↔ Odd n := by sorry,False,0,0,1,0,True,False,False
 Axler|exercise_3_8,"Suppose that $V$ is finite dimensional and that $T \in \mathcal{L}(V, W)$. Prove that there exists a subspace $U$ of $V$ such that $U \cap \operatorname{null} T=\{0\}$ and range $T=\{T u: u \in U\}$.","import Mathlib
 
@@ -1721,7 +1721,7 @@ open scoped BigOperators
 ","theorem exercise_5_13 {F V : Type*} [AddCommGroup V] [Field F]
   [Module F V] [FiniteDimensional F V] {T : End F V}
   (hS : ∀ U : Submodule F V, finrank F U = finrank F V - 1 →
-  Submodule.map T U = U) : ∃ c : F, T = c • LinearMap.id :=","theorem dummy {K V : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] (T : End K V) (hT : ∀ (U : Submodule K V), FiniteDimensional.finrank K U = FiniteDimensional.finrank K V - 1 → T '' U = U) : ∃ (c : K), T = c • LinearMap.id := sorry",True,0,1,0,0,True,True,False
+  Submodule.map T U = U) : ∃ c : F, T = c • LinearMap.id :=","theorem dummy {K V : Type*} [Field K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] (T : End K V) (hT : ∀ (U : Submodule K V), FiniteDimensional.finrank K U = FiniteDimensional.finrank K V - 1 → T '' U = U) : ∃ (c : K), T = c • LinearMap.id := sorry",True,0,1,0,1,True,True,False
 Dummit-Foote|exercise_1_1_29,Prove that $A \times B$ is an abelian group if and only if both $A$ and $B$ are abelian.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -1894,7 +1894,7 @@ open scoped BigOperators
 ","theorem exercise_2_2_3 {G : Type*} [Group G]
   {P : ℕ → Prop} {hP : P = λ i => ∀ a b : G, (a*b)^i = a^i * b^i}
   (hP1 : ∃ n : ℕ, P n ∧ P (n+1) ∧ P (n+2)) : 
-  ∀ a b : G, a*b = b*a :=","theorem dummy {G : Type*} [Group G] (h : ∃ i : ℤ, ∀ a b : G, (a * b) ^ i = a ^ i * b ^ i ∧ (a * b) ^ (i + 1) = a ^ (i + 1) * b ^ (i + 1) ∧ (a * b) ^ (i + 2) = a ^ (i + 2) * b ^ (i + 2)) : ∀ a b : G, a * b = b * a := sorry",True,0,1,1,0,True,True,True
+  ∀ a b : G, a*b = b*a :=","theorem dummy {G : Type*} [Group G] (h : ∃ i : ℤ, ∀ a b : G, (a * b) ^ i = a ^ i * b ^ i ∧ (a * b) ^ (i + 1) = a ^ (i + 1) * b ^ (i + 1) ∧ (a * b) ^ (i + 2) = a ^ (i + 2) * b ^ (i + 2)) : ∀ a b : G, a * b = b * a := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_7_1_12,Prove that any subring of a field which contains the identity is an integral domain.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -1917,7 +1917,7 @@ open scoped BigOperators
 ","theorem exercise_1_6_23 {G : Type*}
   [Group G] (σ : MulAut G) (hs : ∀ g : G, σ g = g ↔ g = 1)
   (hs2 : ∀ g : G, σ (σ g) = g) :
-  ∀ x y : G, x*y = y*x :=","theorem dummy (G : Type*) [Group G] [Fintype G] (σ : G →* G) (hs : ∀ g : G, σ g = g ↔ g = 1) : (∀ g : G, σ (σ g) = g) → ∀ (a b : G), a * b = b * a := sorry",True,0,1,1,0,False,True,True
+  ∀ x y : G, x*y = y*x :=","theorem dummy (G : Type*) [Group G] [Fintype G] (σ : G →* G) (hs : ∀ g : G, σ g = g ↔ g = 1) : (∀ g : G, σ (σ g) = g) → ∀ (a b : G), a * b = b * a := sorry",True,0,1,1,1,False,True,True
 Dummit-Foote|exercise_8_2_4,"Let $R$ be an integral domain. Prove that if the following two conditions hold then $R$ is a Principal Ideal Domain: (i) any two nonzero elements $a$ and $b$ in $R$ have a greatest common divisor which can be written in the form $r a+s b$ for some $r, s \in R$, and (ii) if $a_{1}, a_{2}, a_{3}, \ldots$ are nonzero elements of $R$ such that $a_{i+1} \mid a_{i}$ for all $i$, then there is a positive integer $N$ such that $a_{n}$ is a unit times $a_{N}$ for all $n \geq N$.","import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -2176,7 +2176,7 @@ open scoped BigOperators
 
 ","theorem exercise_2_2_6c {G : Type*} [Group G] {n : ℕ} (hn : n > 1)
   (h : ∀ (a b : G), (a * b) ^ n = a ^ n * b ^ n) :
-  ∀ (a b : G), (a * b * a⁻¹ * b⁻¹) ^ (n * (n - 1)) = 1 :=","theorem dummy {G : Type*} [Group G] {a b : G} {n : ℕ} (hn : n > 1) (h : ∀ x y : G, (x * y) ^ n = x ^ n * y ^ n) (h' : (a * b) ^ n = a ^ n * b ^ n) (h'' : (a * b * a⁻¹ * b⁻¹) ^ n = a ^ n * b ^ n * a⁻¹ ^ n * b⁻¹ ^ n) : (a * b * a⁻¹ * b⁻¹) ^ (n * (n - 1)) = 1 := sorry",True,0,1,1,0,True,False,False
+  ∀ (a b : G), (a * b * a⁻¹ * b⁻¹) ^ (n * (n - 1)) = 1 :=","theorem dummy {G : Type*} [Group G] {a b : G} {n : ℕ} (hn : n > 1) (h : ∀ x y : G, (x * y) ^ n = x ^ n * y ^ n) (h' : (a * b) ^ n = a ^ n * b ^ n) (h'' : (a * b * a⁻¹ * b⁻¹) ^ n = a ^ n * b ^ n * a⁻¹ ^ n * b⁻¹ ^ n) : (a * b * a⁻¹ * b⁻¹) ^ (n * (n - 1)) = 1 := sorry",True,0,1,1,1,True,False,False
 Rudin|exercise_5_7,"Suppose $f^{\prime}(x), g^{\prime}(x)$ exist, $g^{\prime}(x) \neq 0$, and $f(x)=g(x)=0$. Prove that $\lim _{t \rightarrow x} \frac{f(t)}{g(t)}=\frac{f^{\prime}(x)}{g^{\prime}(x)}.$","import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -2301,7 +2301,7 @@ open Fintype Subgroup Set Polynomial Ideal
 open scoped BigOperators
 
 ","theorem exercise_4_5_19 {G : Type*} [Fintype G] [Group G]
-  (hG : card G = 6545) : ¬ IsSimpleGroup G :=",theorem dummy (G : Type*) [Group G] [Fintype G] [DecidableEq G] (hG : Fintype.card G = 6545) : ¬IsSimpleGroup G := sorry,True,0,1,1,0,True,True,True
+  (hG : card G = 6545) : ¬ IsSimpleGroup G :=",theorem dummy (G : Type*) [Group G] [Fintype G] [DecidableEq G] (hG : Fintype.card G = 6545) : ¬IsSimpleGroup G := sorry,True,0,1,1,1,True,True,True
 Herstein|exercise_5_1_8,"If $F$ is a field of characteristic $p \neq 0$, show that $(a + b)^m = a^m + b^m$, where $m = p^n$, for all $a, b \in F$ and any positive integer $n$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -2715,7 +2715,7 @@ open Topology Filter Real Complex TopologicalSpace Finset
 open scoped BigOperators
 
 ","theorem exercise_1_18b
-  : ∀ (x : ℝ), x ≠ 0 → ¬ ∃ (y : ℝ), y ≠ 0 ∧ x * y = 0 :=","theorem dummy (R : Type*) [Ring R] {x : R} (hx : x ≠ 0) : ∀ {y : R}, y ≠ 0 → x * y ≠ 0 := sorry",True,0,1,1,0,False,False,False
+  : ∀ (x : ℝ), x ≠ 0 → ¬ ∃ (y : ℝ), y ≠ 0 ∧ x * y = 0 :=","theorem dummy (R : Type*) [Ring R] {x : R} (hx : x ≠ 0) : ∀ {y : R}, y ≠ 0 → x * y ≠ 0 := sorry",True,0,1,1,1,False,False,False
 Pugh|exercise_3_63a,Prove that $\sum 1/k(\log(k))^p$ converges when $p > 1$.,"import Mathlib
 
 open Filter Real Function
@@ -2886,7 +2886,7 @@ open Fintype Subgroup Set Polynomial Ideal
 open scoped BigOperators
 
 ","theorem exercise_7_2_2 {R : Type*} [Ring R] (p : Polynomial R) :
-  p ∣ 0 ↔ ∃ b : R, b ≠ 0 ∧ b • p = 0 :=","theorem dummy {R : Type*} [CommRing R] (p : R[X]) : (∃ q : R[X], q ≠ 0 ∧ p * q = 0) ↔ ∃ b : R, b ≠ 0 ∧ b • p = 0 := sorry",True,0,1,1,0,True,True,True
+  p ∣ 0 ↔ ∃ b : R, b ≠ 0 ∧ b • p = 0 :=","theorem dummy {R : Type*} [CommRing R] (p : R[X]) : (∃ q : R[X], q ≠ 0 ∧ p * q = 0) ↔ ∃ b : R, b ≠ 0 ∧ b • p = 0 := sorry",True,0,1,1,1,True,True,True
 Putnam|exercise_1999_b4,"Let $f$ be a real function with a continuous third derivative such that $f(x), f^{\prime}(x), f^{\prime \prime}(x), f^{\prime \prime \prime}(x)$ are positive for all $x$. Suppose that $f^{\prime \prime \prime}(x) \leq f(x)$ for all $x$. Show that $f^{\prime}(x)<2 f(x)$ for all $x$.","import Mathlib
 
 open scoped BigOperators
@@ -3263,7 +3263,7 @@ open scoped Topology
   {A B : Set M} (hA : IsCompact A) (hB : IsCompact B)
   (hAB : Disjoint A B) (hA₀ : A ≠ ∅) (hB₀ : B ≠ ∅) :
   ∃ a₀ b₀, a₀ ∈ A ∧ b₀ ∈ B ∧ ∀ (a : M) (b : M),
-  a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b :=","theorem dummy {X : Type*} [MetricSpace X] {A B : Set X} (hAB : Disjoint A B) (hA : IsCompact A) (hB : IsCompact B) (hAne : Set.Nonempty A) (hBne : Set.Nonempty B) : ∃ a₀ ∈ A, ∃ b₀ ∈ B, ∀ a ∈ A, ∀ b ∈ B, dist a₀ b₀ ≤ dist a b := sorry",True,0,1,1,0,True,True,True
+  a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b :=","theorem dummy {X : Type*} [MetricSpace X] {A B : Set X} (hAB : Disjoint A B) (hA : IsCompact A) (hB : IsCompact B) (hAne : Set.Nonempty A) (hBne : Set.Nonempty B) : ∃ a₀ ∈ A, ∃ b₀ ∈ B, ∀ a ∈ A, ∀ b ∈ B, dist a₀ b₀ ≤ dist a b := sorry",True,0,1,1,1,True,True,True
 Herstein|exercise_2_2_6c,"Let $G$ be a group in which $(a b)^{n}=a^{n} b^{n}$ for some fixed integer $n>1$ for all $a, b \in G$. For all $a, b \in G$, prove that $\left(a b a^{-1} b^{-1}\right)^{n(n-1)}=e$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -3507,7 +3507,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_21a {X : Type*} [MetricSpace X]
   (K F : Set X) (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) :
-  ∃ (δ : ℝ), δ > 0 ∧ ∀ (p q : X), p ∈ K → q ∈ F → dist p q > δ :=","theorem dummy {X : Type*} [MetricSpace X] (K F : Set X) (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) : ∃ δ : ℝ, δ > 0 ∧ ∀ p ∈ K, ∀ q ∈ F, dist p q ≥ δ := sorry",True,0,1,1,0,False,True,True
+  ∃ (δ : ℝ), δ > 0 ∧ ∀ (p q : X), p ∈ K → q ∈ F → dist p q > δ :=","theorem dummy {X : Type*} [MetricSpace X] (K F : Set X) (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) : ∃ δ : ℝ, δ > 0 ∧ ∀ p ∈ K, ∀ q ∈ F, dist p q ≥ δ := sorry",True,0,1,1,1,False,True,True
 Herstein|exercise_3_2_21,"If $\sigma, \tau$ are two permutations that disturb no common element and $\sigma \tau = e$, prove that $\sigma = \tau = e$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -3681,14 +3681,14 @@ open scoped BigOperators
 
 ","theorem exercise_2_1_13 (H : AddSubgroup ℚ) {x : ℚ}
   (hH : (x ∈ H ∧ x ≠ 0) → (1 / x) ∈ H):
-  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (h : ∀ x ∈ H, x ≠ 0 → 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,0,True,True,True
+  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (h : ∀ x ∈ H, x ≠ 0 → 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_1_1_15,"Prove that $(a_1a_2\dots a_n)^{-1} = a_n^{-1}a_{n-1}^{-1}\dots a_1^{-1}$ for all $a_1, a_2, \dots, a_n\in G$.","import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
 open scoped BigOperators
 
 ","theorem exercise_1_1_15 {G : Type*} [Group G] (as : List G) :
-  as.prod⁻¹ = (as.reverse.map (λ x => x⁻¹)).prod :=",theorem dummy {G : Type*} [Group G] {n : ℕ} (l : List G) (hl : l.length = n) : l.prod⁻¹ = (l.map (Equiv.inv G).toFun).reverse.prod := sorry,True,0,1,1,0,True,True,True
+  as.prod⁻¹ = (as.reverse.map (λ x => x⁻¹)).prod :=",theorem dummy {G : Type*} [Group G] {n : ℕ} (l : List G) (hl : l.length = n) : l.prod⁻¹ = (l.map (Equiv.inv G).toFun).reverse.prod := sorry,True,0,1,1,1,True,True,True
 Rudin|exercise_1_8,Prove that no order can be defined in the complex field that turns it into an ordered field.,"import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -3847,7 +3847,7 @@ open scoped BigOperators
 
 ","theorem exercise_2_1_13 (H : AddSubgroup ℚ) {x : ℚ}
   (hH : (x ∈ H ∧ x ≠ 0) → (1 / x) ∈ H):
-  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (hH : ∀ x ∈ H, x ≠ 0 → 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,0,True,True,True
+  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (hH : ∀ x ∈ H, x ≠ 0 → 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_1_1_17,Let $x$ be an element of $G$. Prove that if $|x|=n$ for some positive integer $n$ then $x^{-1}=x^{n-1}$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -4202,7 +4202,7 @@ open scoped BigOperators
   [Module F V] {L : V →ₗ[F] V} {n : ℕ} (U : Fin n → Submodule F V)
   (hU : ∀ i : Fin n, Submodule.map L (U i) = U i) :
   Submodule.map L (∑ i : Fin n, U i : Submodule F V) =
-  (∑ i : Fin n, U i : Submodule F V) :=","theorem dummy {V : Type*} [AddCommGroup V] [Module ℝ V] {T : V →ₗ[ℝ] V} {m : ℕ} {U : Fin m → Submodule ℝ V} (hU : ∀ i, T '' (U i : Set V) ⊆ U i) : T '' ((⨆ i, U i) : Set V) ⊆ (⨆ i, U i) := sorry",True,0,1,1,0,False,True,True
+  (∑ i : Fin n, U i : Submodule F V) :=","theorem dummy {V : Type*} [AddCommGroup V] [Module ℝ V] {T : V →ₗ[ℝ] V} {m : ℕ} {U : Fin m → Submodule ℝ V} (hU : ∀ i, T '' (U i : Set V) ⊆ U i) : T '' ((⨆ i, U i) : Set V) ⊆ (⨆ i, U i) := sorry",True,0,1,1,1,False,True,True
 Dummit-Foote|exercise_7_1_2,Prove that if $u$ is a unit in $R$ then so is $-u$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -4234,7 +4234,7 @@ open scoped Topology
   (X : Type*) [TopologicalSpace X] [CompactSpace X] [T2Space X]
   (X1 X2 : Set X) (hX1 : IsClosed X1) (hX2 : IsClosed X2)
   (hX : X1 ∪ X2 = univ) (hX1m : MetrizableSpace X1)
-  (hX2m : MetrizableSpace X2) : MetrizableSpace X :=",theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] [T2Space X] {X1 X2 : Set X} (hX1 : IsClosed X1) (hX2 : IsClosed X2) (hX : X = X1 ∪ X2) (hX1_met : MetrizableSpace X1) (hX2_met : MetrizableSpace X2) : MetrizableSpace X := sorry,True,0,1,1,0,False,False,False
+  (hX2m : MetrizableSpace X2) : MetrizableSpace X :=",theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] [T2Space X] {X1 X2 : Set X} (hX1 : IsClosed X1) (hX2 : IsClosed X2) (hX : X = X1 ∪ X2) (hX1_met : MetrizableSpace X1) (hX2_met : MetrizableSpace X2) : MetrizableSpace X := sorry,True,0,1,1,1,False,False,False
 Dummit-Foote|exercise_7_1_12,Prove that any subring of a field which contains the identity is an integral domain.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -4682,7 +4682,7 @@ open Filter Set TopologicalSpace Topology
 
 ","theorem exercise_22_2a {X Y : Type*} [TopologicalSpace X]
   [TopologicalSpace Y] (p : X → Y) (h : Continuous p) :
-  (∃ (f : Y → X), Continuous f ∧ p ∘ f = id) → QuotientMap p :=","theorem dummy {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (p : X → Y) (hp : Continuous p) (f : Y → X) (hf : Continuous f) (hpf : ∀ y : Y, p (f y) = y) : QuotientMap p := sorry",True,0,1,1,0,True,True,True
+  (∃ (f : Y → X), Continuous f ∧ p ∘ f = id) → QuotientMap p :=","theorem dummy {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (p : X → Y) (hp : Continuous p) (f : Y → X) (hf : Continuous f) (hpf : ∀ y : Y, p (f y) = y) : QuotientMap p := sorry",True,0,1,1,1,True,True,True
 Herstein|exercise_4_2_6,"If $a^2 = 0$ in $R$, show that $ax + xa$ commutes with $a$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -4825,7 +4825,7 @@ open Fintype Set Real Ideal Polynomial
 open scoped BigOperators
 
 ","theorem exercise_4_2_6 {R : Type*} [Ring R] (a x : R)
-  (h : a ^ 2 = 0) : a * (a * x + x * a) = (a * x + x * a) * a :=",theorem dummy (R : Type*) [Ring R] (a x : R) (h : a^2 = 0) : Commute (x * a + a * x) a := sorry,True,0,1,1,0,True,True,True
+  (h : a ^ 2 = 0) : a * (a * x + x * a) = (a * x + x * a) * a :=",theorem dummy (R : Type*) [Ring R] (a x : R) (h : a^2 = 0) : Commute (x * a + a * x) a := sorry,True,0,1,1,1,True,True,True
 Herstein|exercise_2_7_7,"If $\varphi$ is a homomorphism of $G$ onto $G'$ and $N \triangleleft G$, show that $\varphi(N) \triangleleft G'$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -4865,7 +4865,7 @@ open scoped BigOperators
   (h₂ : Continuous g)
   (h₃ : Dense s)
   (h₄ : ∀ x ∈ s, f x = g x)
-  : f = g :=","theorem dummy {X Y : Type*} [MetricSpace X] [MetricSpace Y] {f g : X → Y} (hf : Continuous f) (hg : Continuous g) {E : Set X} (hE : Dense E) (hfg : ∀ p ∈ E, g p = f p) : ∀ p : X, g p = f p := sorry",True,0,1,1,0,True,True,True
+  : f = g :=","theorem dummy {X Y : Type*} [MetricSpace X] [MetricSpace Y] {f g : X → Y} (hf : Continuous f) (hg : Continuous g) {E : Set X} (hE : Dense E) (hfg : ∀ p ∈ E, g p = f p) : ∀ p : X, g p = f p := sorry",True,0,1,1,1,True,True,True
 Ireland-Rosen|exercise_3_4,Show that the equation $3 x^{2}+2=y^{2}$ has no solution in integers.,"import Mathlib
 
 open Real
@@ -5096,7 +5096,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_4_2 {G : Type*} [Fintype G] [CommGroup G]
   {p q : Nat.Primes} (hpq : p ≠ q) (hG : card G = p*q) :
-  IsCyclic G :=","theorem dummy {G : Type*} [Group G] [Fintype G] {p q : ℕ} [hp : Fact (Nat.Prime p)] [hq : Fact (Nat.Prime q)] (hpq : p ≠ q) (hG : Fintype.card G = p * q) (hGabelian : ∀ a b : G, a * b = b * a) : IsCyclic G := sorry",True,0,1,1,0,True,True,True
+  IsCyclic G :=","theorem dummy {G : Type*} [Group G] [Fintype G] {p q : ℕ} [hp : Fact (Nat.Prime p)] [hq : Fact (Nat.Prime q)] (hpq : p ≠ q) (hG : Fintype.card G = p * q) (hGabelian : ∀ a b : G, a * b = b * a) : IsCyclic G := sorry",True,0,1,1,1,True,True,True
 Herstein|exercise_2_5_52,"Let $G$ be a finite group and $\varphi$ an automorphism of $G$ such that $\varphi(x) = x^{-1}$ for more than three-fourths of the elements of $G$. Prove that $\varphi(y) = y^{-1}$ for all $y \in G$, and so $G$ is abelian.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -5188,7 +5188,7 @@ Putnam|exercise_1998_b6,"Prove that, for any integers $a, b, c$, there exists a 
 open scoped BigOperators
 
 ","theorem exercise_1998_b6 (a b c : ℤ) :
-  ∃ n : ℤ, n > 0 ∧ ¬ ∃ m : ℤ, Real.sqrt (n^3 + a*n^2 + b*n + c) = m :=","theorem dummy (a b c : ℤ) : ∃ n : ℕ, 0 < n ∧ ¬ ∃ k : ℤ, k^2 = n^3 + a * n^2 + b * n + c := sorry",True,0,1,1,0,True,True,True
+  ∃ n : ℤ, n > 0 ∧ ¬ ∃ m : ℤ, Real.sqrt (n^3 + a*n^2 + b*n + c) = m :=","theorem dummy (a b c : ℤ) : ∃ n : ℕ, 0 < n ∧ ¬ ∃ k : ℤ, k^2 = n^3 + a * n^2 + b * n + c := sorry",True,0,1,1,1,True,True,True
 Artin|exercise_3_7_2,Let $V$ be a vector space over an infinite field $F$. Prove that $V$ is not the union of finitely many proper subspaces.,"import Mathlib
 
 open Function Fintype Subgroup Ideal Polynomial Submodule Zsqrtd
@@ -5387,7 +5387,7 @@ open scoped Topology
 
 ","theorem exercise_3_1 {f : ℝ → ℝ}
   (hf : ∀ x y, |f x - f y| ≤ |x - y| ^ 2) :
-  ∃ c, f = λ x => c :=","theorem dummy (f : ℝ → ℝ) (hf : ∀ t x, abs (f t - f x) ≤ abs (t - x) ^ 2) : ∃ c : ℝ, ∀ t, f t = c := sorry",True,0,1,1,0,True,True,True
+  ∃ c, f = λ x => c :=","theorem dummy (f : ℝ → ℝ) (hf : ∀ t x, abs (f t - f x) ≤ abs (t - x) ^ 2) : ∃ c : ℝ, ∀ t, f t = c := sorry",True,0,1,1,1,True,True,True
 Putnam|exercise_1998_b6,"Prove that, for any integers $a, b, c$, there exists a positive integer $n$ such that $\sqrt{n^3+a n^2+b n+c}$ is not an integer.","import Mathlib
 
 open scoped BigOperators
@@ -5813,7 +5813,7 @@ open scoped BigOperators
 
 ","theorem exercise_2_1_13 (H : AddSubgroup ℚ) {x : ℚ}
   (hH : (x ∈ H ∧ x ≠ 0) → (1 / x) ∈ H):
-  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (hH : ∀ x ∈ H, x ≠ 0 → (1 / x : ℚ) ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,0,True,True,True
+  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (hH : ∀ x ∈ H, x ≠ 0 → (1 / x : ℚ) ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,1,True,True,True
 Rudin|exercise_3_13,Prove that the Cauchy product of two absolutely convergent series converges absolutely.,"import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -5929,7 +5929,7 @@ open scoped BigOperators
 
 ","theorem exercise_5_1
   {f : ℝ → ℝ} (hf : ∀ x y : ℝ, |(f x - f y)| ≤ (x - y) ^ 2) :
-  ∃ c, f = λ x => c :=","theorem dummy {f : ℝ → ℝ} (h : ∀ x y : ℝ, |f x - f y| ≤ (x - y) ^ 2) : ∃ c : ℝ, ∀ x : ℝ, f x = c := sorry",True,0,1,1,0,True,True,True
+  ∃ c, f = λ x => c :=","theorem dummy {f : ℝ → ℝ} (h : ∀ x y : ℝ, |f x - f y| ≤ (x - y) ^ 2) : ∃ c : ℝ, ∀ x : ℝ, f x = c := sorry",True,0,1,1,1,True,True,True
 Rudin|exercise_1_18b,"If $k = 1$ and $\mathbf{x} \in R^{k}$, $\mathbf{x} \neq 0$, prove that there does not exist $\mathbf{y} \in R^{k}$ such that $\mathbf{y} \neq 0$ but $\mathbf{x} \cdot \mathbf{y}=0$","import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -6059,7 +6059,7 @@ open scoped BigOperators
 ","theorem exercise_2_5_52 {G : Type*} [Group G] [Fintype G]
   (φ : G ≃* G) {I : Finset G} (hI : ∀ x ∈ I, φ x = x⁻¹)
   (hI1 : (0.75 : ℚ) * card G ≤ card I) :
-  (∀ x : G, φ x = x⁻¹) ∧ ∀ x y : G, x*y = y*x :=","theorem dummy {G : Type*} [Group G] [Fintype G] (φ : G ≃* G) (hφ : ∃ S : Finset G, S.card > (3 * Fintype.card G) / 4 ∧ ∀ x ∈ S, φ x = x⁻¹) : ∀ y : G, φ y = y⁻¹ ∧ ∀ a b : G, a * b = b * a := sorry",True,0,1,1,0,True,True,True
+  (∀ x : G, φ x = x⁻¹) ∧ ∀ x y : G, x*y = y*x :=","theorem dummy {G : Type*} [Group G] [Fintype G] (φ : G ≃* G) (hφ : ∃ S : Finset G, S.card > (3 * Fintype.card G) / 4 ∧ ∀ x ∈ S, φ x = x⁻¹) : ∀ y : G, φ y = y⁻¹ ∧ ∀ a b : G, a * b = b * a := sorry",True,0,1,1,1,True,True,True
 Herstein|exercise_5_3_7,"If $a \in K$ is such that $a^2$ is algebraic over the subfield $F$ of $K$, show that a is algebraic over $F$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -6242,7 +6242,7 @@ open scoped BigOperators
 
 ","theorem exercise_2_1_13 (H : AddSubgroup ℚ) {x : ℚ}
   (hH : (x ∈ H ∧ x ≠ 0) → (1 / x) ∈ H):
-  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (h : ∀ x : ℚ, x ≠ 0 → x ∈ H → 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,0,True,True,True
+  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (h : ∀ x : ℚ, x ≠ 0 → x ∈ H → 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_9_1_10,"Prove that the ring $\mathbb{Z}\left[x_{1}, x_{2}, x_{3}, \ldots\right] /\left(x_{1} x_{2}, x_{3} x_{4}, x_{5} x_{6}, \ldots\right)$ contains infinitely many minimal prime ideals.","import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -6466,7 +6466,7 @@ Dummit-Foote|exercise_9_4_2a,Prove that $x^4-4x^3+6$ is irreducible in $\mathbb{
 open Fintype Subgroup Set Polynomial Ideal
 open scoped BigOperators
 
-",theorem exercise_9_4_2a : Irreducible (X^4 - 4*X^3 + 6 : Polynomial ℤ) :=,theorem dummy : Irreducible (Polynomial.C (6 : ℤ) + Polynomial.C (-4 : ℤ) * Polynomial.X ^ 3 + Polynomial.X ^ 4) := sorry,True,0,1,1,0,True,True,True
+",theorem exercise_9_4_2a : Irreducible (X^4 - 4*X^3 + 6 : Polynomial ℤ) :=,theorem dummy : Irreducible (Polynomial.C (6 : ℤ) + Polynomial.C (-4 : ℤ) * Polynomial.X ^ 3 + Polynomial.X ^ 4) := sorry,True,0,1,1,1,True,True,True
 Herstein|exercise_4_6_2,Prove that $f(x) = x^3 + 3x + 2$ is irreducible in $Q[x]$.,"import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -6967,7 +6967,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_21a {X : Type*} [MetricSpace X]
   (K F : Set X) (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) :
-  ∃ (δ : ℝ), δ > 0 ∧ ∀ (p q : X), p ∈ K → q ∈ F → dist p q > δ :=","theorem dummy {X : Type*} [MetricSpace X] {K F : Set X} (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) : ∃ ε : ℝ, ε > 0 ∧ ∀ (p : X) (hp : p ∈ K) (q : X) (hq : q ∈ F), dist p q ≥ ε := sorry",True,0,1,1,0,True,True,True
+  ∃ (δ : ℝ), δ > 0 ∧ ∀ (p q : X), p ∈ K → q ∈ F → dist p q > δ :=","theorem dummy {X : Type*} [MetricSpace X] {K F : Set X} (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) : ∃ ε : ℝ, ε > 0 ∧ ∀ (p : X) (hp : p ∈ K) (q : X) (hq : q ∈ F), dist p q ≥ ε := sorry",True,0,1,1,1,True,True,True
 brualdi_ch14_33,Prove that a permutation and its inverse have the same type.,import Mathlib,"theorem brualdi_ch14_33 {α : Type*} [Fintype α] [DecidableEq α] (σ : Equiv.Perm α) :
     σ.cycleType = σ⁻¹.cycleType := by sorry","theorem brualdi_ch14_33 {α : Type*} [Fintype α] [DecidableEq α] (σ : Equiv.Perm α) :
     σ.cycleType = σ.cycleType := by sorry",False,0,0,1,0,False,False,False
@@ -6995,7 +6995,7 @@ open Topology Filter Real Complex TopologicalSpace Finset
 open scoped BigOperators
 
 ","theorem exercise_1_18b
-  : ∀ (x : ℝ), x ≠ 0 → ¬ ∃ (y : ℝ), y ≠ 0 ∧ x * y = 0 :=",theorem dummy {x y : ℝ} (hx : x ≠ 0) (hxy : x * y = 0) : y = 0 := sorry,True,0,1,1,0,True,True,True
+  : ∀ (x : ℝ), x ≠ 0 → ¬ ∃ (y : ℝ), y ≠ 0 ∧ x * y = 0 :=",theorem dummy {x y : ℝ} (hx : x ≠ 0) (hxy : x * y = 0) : y = 0 := sorry,True,0,1,1,1,True,True,True
 Rudin|exercise_5_1,"Let $f$ be defined for all real $x$, and suppose that $|f(x)-f(y)| \leq (x-y)^{2}$ for all real $x$ and $y$. Prove that $f$ is constant.","import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -7146,7 +7146,7 @@ open Fintype Set Real Ideal Polynomial
 open scoped BigOperators
 
 ","theorem exercise_2_1_26 {G : Type*} [Group G]
-  [Fintype G] (a : G) : ∃ (n : ℕ), n > 0 ∧ a ^ n = 1 :=","theorem dummy {G : Type*} [Group G] [Finite G] (a : G) : ∃ n : ℕ, n ≠ 0 ∧ a ^ n = 1 := sorry",True,0,1,1,0,True,True,True
+  [Fintype G] (a : G) : ∃ (n : ℕ), n > 0 ∧ a ^ n = 1 :=","theorem dummy {G : Type*} [Group G] [Finite G] (a : G) : ∃ n : ℕ, n ≠ 0 ∧ a ^ n = 1 := sorry",True,0,1,1,1,True,True,True
 Ireland-Rosen|exercise_3_10,"If $n$ is not a prime, show that $(n-1) ! \equiv 0(n)$, except when $n=4$.","import Mathlib
 
 open Real
@@ -8020,7 +8020,7 @@ open scoped Topology
 
 ","theorem exercise_3_1 {f : ℝ → ℝ}
   (hf : ∀ x y, |f x - f y| ≤ |x - y| ^ 2) :
-  ∃ c, f = λ x => c :=","theorem dummy {R : Type*} [LinearOrderedField R] {f : R → R} (hf : ∀ t x : R, |f t - f x| ≤ |t - x|^2) : ∃ c : R, ∀ t, f t = c := sorry",True,0,1,0,0,False,True,False
+  ∃ c, f = λ x => c :=","theorem dummy {R : Type*} [LinearOrderedField R] {f : R → R} (hf : ∀ t x : R, |f t - f x| ≤ |t - x|^2) : ∃ c : R, ∀ t, f t = c := sorry",True,0,1,0,1,False,True,False
 Putnam|exercise_2018_a5,"Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be an infinitely differentiable function satisfying $f(0)=0, f(1)=1$, and $f(x) \geq 0$ for all $x \in$ $\mathbb{R}$. Show that there exist a positive integer $n$ and a real number $x$ such that $f^{(n)}(x)<0$.","import Mathlib
 
 open scoped BigOperators
@@ -8184,7 +8184,7 @@ open scoped Topology
 
 ","theorem exercise_22_5 {X Y : Type*} [TopologicalSpace X]
   [TopologicalSpace Y] (p : X → Y) (hp : IsOpenMap p)
-  (A : Set X) (hA : IsOpen A) : IsOpenMap (p ∘ Subtype.val : A → Y) :=",theorem dummy {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (p : X → Y) (hf : IsOpenMap p) (A : Set X) (hA : IsOpen A) : IsOpen (p '' A) := sorry,True,0,1,1,0,False,False,False
+  (A : Set X) (hA : IsOpen A) : IsOpenMap (p ∘ Subtype.val : A → Y) :=",theorem dummy {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (p : X → Y) (hf : IsOpenMap p) (A : Set X) (hA : IsOpen A) : IsOpen (p '' A) := sorry,True,0,1,1,1,False,False,False
 Herstein|exercise_5_6_14,"If $F$ is of characteristic $p \neq 0$, show that all the roots of $x^m - x$, where $m = p^n$, are distinct.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -8305,7 +8305,7 @@ open scoped BigOperators
 
 ","theorem exercise_2_10_1 {G : Type*} [Group G] (A : Subgroup G)
   [A.Normal] {b : G} (hb : b ∉ A) (hp : Nat.Prime (orderOf b)) :
-  A ⊓ (Subgroup.closure {b}) = ⊥ :=",theorem dummy {G : Type*} [Group G] {p : ℕ} [hp : Fact p.Prime] {A : Subgroup G} (hA : A.Normal) {b : G} (hb : b ∉ A) (hb' : orderOf b = p) : A ⊓ Subgroup.closure {b} = ⊥ := sorry,True,0,1,1,0,True,True,True
+  A ⊓ (Subgroup.closure {b}) = ⊥ :=",theorem dummy {G : Type*} [Group G] {p : ℕ} [hp : Fact p.Prime] {A : Subgroup G} (hA : A.Normal) {b : G} (hb : b ∉ A) (hb' : orderOf b = p) : A ⊓ Subgroup.closure {b} = ⊥ := sorry,True,0,1,1,1,True,True,True
 Ireland-Rosen|exercise_4_4,Consider a prime $p$ of the form $4 t+1$. Show that $a$ is a primitive root modulo $p$ iff $-a$ is a primitive root modulo $p$.,"import Mathlib
 
 open Real
@@ -8336,7 +8336,7 @@ open Real
 open scoped BigOperators
 
 ","theorem exercise_2_27a :
-  ¬ Summable (λ i : {p : ℤ // Squarefree p} => (1 : ℚ) / i) :=",theorem dummy : ¬ Summable (fun n => if H : Squarefree n then 1 / n else 0) := sorry,True,0,1,1,0,False,False,False
+  ¬ Summable (λ i : {p : ℤ // Squarefree p} => (1 : ℚ) / i) :=",theorem dummy : ¬ Summable (fun n => if H : Squarefree n then 1 / n else 0) := sorry,True,0,1,1,1,False,False,False
 Rudin|exercise_4_3,Let $f$ be a continuous real function on a metric space $X$. Let $Z(f)$ (the zero set of $f$ ) be the set of all $p \in X$ at which $f(p)=0$. Prove that $Z(f)$ is closed.,"import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -8371,7 +8371,7 @@ open scoped BigOperators
 
 ","theorem exercise_5_1
   {f : ℝ → ℝ} (hf : ∀ x y : ℝ, |(f x - f y)| ≤ (x - y) ^ 2) :
-  ∃ c, f = λ x => c :=","theorem dummy (f : ℝ → ℝ) (h : ∀ x y : ℝ, |f x - f y| ≤ (x - y)^2) : ∃ c : ℝ, ∀ x : ℝ, f x = c := sorry",True,0,1,1,0,True,True,True
+  ∃ c, f = λ x => c :=","theorem dummy (f : ℝ → ℝ) (h : ∀ x y : ℝ, |f x - f y| ≤ (x - y)^2) : ∃ c : ℝ, ∀ x : ℝ, f x = c := sorry",True,0,1,1,1,True,True,True
 Artin|exercise_11_13_3,Prove that there are infinitely many primes congruent to $-1$ (modulo $4$).,"import Mathlib
 
 open Function Fintype Subgroup Ideal Polynomial Submodule Zsqrtd
@@ -8442,7 +8442,7 @@ open scoped Topology
   (hs : ∀ i, IsCompact (s i))
   (hne : ∀ i, (s i).Nonempty)
   (hs : ∀ i, (s i) ⊇ (s (i + 1))) :
-  (⋂ i, s i).Nonempty :=","theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] {K : ℕ → Set X} (hK : ∀ n, IsCompact (K n)) (hK_decreasing : ∀ n, K n ⊇ K (n + 1)) (hK_nonempty : ∀ n, Set.Nonempty (K n)) : ∃ x : X, ∀ n, x ∈ K n := sorry",True,0,1,1,0,False,False,False
+  (⋂ i, s i).Nonempty :=","theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] {K : ℕ → Set X} (hK : ∀ n, IsCompact (K n)) (hK_decreasing : ∀ n, K n ⊇ K (n + 1)) (hK_nonempty : ∀ n, Set.Nonempty (K n)) : ∃ x : X, ∀ n, x ∈ K n := sorry",True,0,1,1,1,False,False,False
 Dummit-Foote|exercise_1_1_4,Prove that the multiplication of residue class $\mathbb{Z}/n\mathbb{Z}$ is associative.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -8900,7 +8900,7 @@ open scoped BigOperators
 (h₀ : Set.Nonempty s)
 (h₁ : x ∈ lowerBounds s)
 (h₂ : y ∈ upperBounds s)
-: x ≤ y :=","theorem dummy {α : Type*} [PartialOrder α] {s : Set α} (hs : s.Nonempty) {a b : α} (ha : ∀ x ∈ s, a ≤ x) (hb : ∀ x ∈ s, x < b) : a ≤ b := sorry",True,0,1,1,0,False,False,False
+: x ≤ y :=","theorem dummy {α : Type*} [PartialOrder α] {s : Set α} (hs : s.Nonempty) {a b : α} (ha : ∀ x ∈ s, a ≤ x) (hb : ∀ x ∈ s, x < b) : a ≤ b := sorry",True,0,1,1,1,False,False,False
 Artin|exercise_11_4_6c,Prove that $x^3 - 9$ is irreducible in $\mathbb{F}_{31}$.,"import Mathlib
 
 open Function Fintype Subgroup Ideal Polynomial Submodule Zsqrtd
@@ -8932,7 +8932,7 @@ open scoped Topology
 
 ","theorem exercise_31_1 {X : Type*} [TopologicalSpace X]
   (hX : RegularSpace X) (x y : X) (hxy : x ≠ y) :
-  ∃ (U V : Set X), IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ y ∈ V ∧ closure U ∩ closure V = ∅ :=","theorem dummy {X : Type*} [TopologicalSpace X] [RegularSpace X] {x y : X} (h : x ≠ y) : ∃ (u : Set X) (v : Set X), IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ Disjoint (closure u) (closure v) := sorry",True,0,1,1,0,True,True,True
+  ∃ (U V : Set X), IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ y ∈ V ∧ closure U ∩ closure V = ∅ :=","theorem dummy {X : Type*} [TopologicalSpace X] [RegularSpace X] {x y : X} (h : x ≠ y) : ∃ (u : Set X) (v : Set X), IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ Disjoint (closure u) (closure v) := sorry",True,0,1,1,1,True,True,True
 Munkres|exercise_18_8a,"Let $Y$ be an ordered set in the order topology. Let $f, g: X \rightarrow Y$ be continuous. Show that the set $\{x \mid f(x) \leq g(x)\}$ is closed in $X$.","import Mathlib
 
 open Filter Set TopologicalSpace
@@ -9124,7 +9124,7 @@ open Fintype Complex Polynomial LinearMap FiniteDimensional Module Module.End
 open scoped BigOperators
 
 ","theorem exercise_1_2 :
-  (⟨-1/2, Real.sqrt 3 / 2⟩ : ℂ) ^ 3 = 1 :=",theorem dummy : (((-1 : ℂ) + √(3 : ℝ) * I) / 2)^3 = 1 := sorry,True,0,1,1,0,True,True,True
+  (⟨-1/2, Real.sqrt 3 / 2⟩ : ℂ) ^ 3 = 1 :=",theorem dummy : (((-1 : ℂ) + √(3 : ℝ) * I) / 2)^3 = 1 := sorry,True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_2_1_13,Let $H$ be a subgroup of the additive group of rational numbers with the property that $1 / x \in H$ for every nonzero element $x$ of $H$. Prove that $H=0$ or $\mathbb{Q}$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -9132,7 +9132,7 @@ open scoped BigOperators
 
 ","theorem exercise_2_1_13 (H : AddSubgroup ℚ) {x : ℚ}
   (hH : (x ∈ H ∧ x ≠ 0) → (1 / x) ∈ H):
-  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (hx : ∀ x ∈ H, ∀ x0 : x ≠ 0, 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,0,True,True,True
+  H = ⊥ ∨ H = ⊤ :=","theorem dummy {H : AddSubgroup ℚ} (hx : ∀ x ∈ H, ∀ x0 : x ≠ 0, 1 / x ∈ H) : H = ⊥ ∨ H = ⊤ := sorry",True,0,1,1,1,True,True,True
 Putnam|exercise_2018_a5,"Let $f: \mathbb{R} \rightarrow \mathbb{R}$ be an infinitely differentiable function satisfying $f(0)=0, f(1)=1$, and $f(x) \geq 0$ for all $x \in$ $\mathbb{R}$. Show that there exist a positive integer $n$ and a real number $x$ such that $f^{(n)}(x)<0$.","import Mathlib
 
 open scoped BigOperators
@@ -9287,7 +9287,7 @@ open Real
 open scoped BigOperators
 
 ","theorem exercise_3_10 {n : ℕ+} (hn0 : ¬ n.Prime) :
-  Nat.factorial (n-1) ≡ 0 [MOD n] ↔ n ≠ 4 :=",theorem dummy (n : ℕ) (hnp : ¬Nat.Prime n) : n.pred.factorial % n = 0 ∨ n = 4 := sorry,True,0,1,1,0,False,False,False
+  Nat.factorial (n-1) ≡ 0 [MOD n] ↔ n ≠ 4 :=",theorem dummy (n : ℕ) (hnp : ¬Nat.Prime n) : n.pred.factorial % n = 0 ∨ n = 4 := sorry,True,0,1,1,1,False,False,False
 Rudin|exercise_2_25,Prove that every compact metric space $K$ has a countable base.,"import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -9463,7 +9463,7 @@ open scoped Topology
   {A B : Set M} (hA : IsCompact A) (hB : IsCompact B)
   (hAB : Disjoint A B) (hA₀ : A ≠ ∅) (hB₀ : B ≠ ∅) :
   ∃ a₀ b₀, a₀ ∈ A ∧ b₀ ∈ B ∧ ∀ (a : M) (b : M),
-  a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b :=","theorem dummy {X : Type*} [PseudoMetricSpace X] {A B : Set X} (ha : IsCompact A) (hb : IsCompact B) (hne : (A : Set X).Nonempty) (hne' : (B : Set X).Nonempty) (h : Disjoint A B) : ∃ (a₀ : X)(H : a₀ ∈ A) (b₀ : X)(H : b₀ ∈ B), ∀ (a : X)(ha : a ∈ A) (b : X)(hb : b ∈ B), dist a₀ b₀ ≤ dist a b := sorry",True,0,1,1,0,True,True,True
+  a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b :=","theorem dummy {X : Type*} [PseudoMetricSpace X] {A B : Set X} (ha : IsCompact A) (hb : IsCompact B) (hne : (A : Set X).Nonempty) (hne' : (B : Set X).Nonempty) (h : Disjoint A B) : ∃ (a₀ : X)(H : a₀ ∈ A) (b₀ : X)(H : b₀ ∈ B), ∀ (a : X)(ha : a ∈ A) (b : X)(hb : b ∈ B), dist a₀ b₀ ≤ dist a b := sorry",True,0,1,1,1,True,True,True
 Herstein|exercise_4_2_6,"If $a^2 = 0$ in $R$, show that $ax + xa$ commutes with $a$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -9528,7 +9528,7 @@ Ireland-Rosen|exercise_3_4,Show that the equation $3 x^{2}+2=y^{2}$ has no solut
 open Real
 open scoped BigOperators
 
-","theorem exercise_3_4 : ¬ ∃ x y : ℤ, 3*x^2 + 2 = y^2 :=",theorem dummy {x y : ℤ} : 3 * x ^ 2 + 2 = y ^ 2 → False := sorry,True,0,1,1,0,True,True,True
+","theorem exercise_3_4 : ¬ ∃ x y : ℤ, 3*x^2 + 2 = y^2 :=",theorem dummy {x y : ℤ} : 3 * x ^ 2 + 2 = y ^ 2 → False := sorry,True,0,1,1,1,True,True,True
 Pugh|exercise_3_63a,Prove that $\sum 1/k(\log(k))^p$ converges when $p > 1$.,"import Mathlib
 
 open Filter Real Function
@@ -9576,7 +9576,7 @@ open scoped Topology
   (X : Type*) [TopologicalSpace X] [CompactSpace X] [T2Space X]
   (X1 X2 : Set X) (hX1 : IsClosed X1) (hX2 : IsClosed X2)
   (hX : X1 ∪ X2 = univ) (hX1m : MetrizableSpace X1)
-  (hX2m : MetrizableSpace X2) : MetrizableSpace X :=","theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] [T2Space X] (hX : ∃ (X₁ X₂ : Set X), IsClosed X₁ ∧ IsClosed X₂ ∧ X₁ ∪ X₂ = X ∧ MetrizableSpace X₁ ∧ MetrizableSpace X₂) : MetrizableSpace X := sorry",True,0,1,1,0,False,True,False
+  (hX2m : MetrizableSpace X2) : MetrizableSpace X :=","theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] [T2Space X] (hX : ∃ (X₁ X₂ : Set X), IsClosed X₁ ∧ IsClosed X₂ ∧ X₁ ∪ X₂ = X ∧ MetrizableSpace X₁ ∧ MetrizableSpace X₂) : MetrizableSpace X := sorry",True,0,1,1,1,False,True,False
 Dummit-Foote|exercise_7_3_16,Let $\varphi: R \rightarrow S$ be a surjective homomorphism of rings. Prove that the image of the center of $R$ is contained in the center of $S$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -9630,7 +9630,7 @@ open scoped Topology
   (X : Type*) [TopologicalSpace X] [CompactSpace X] [T2Space X]
   (X1 X2 : Set X) (hX1 : IsClosed X1) (hX2 : IsClosed X2)
   (hX : X1 ∪ X2 = univ) (hX1m : MetrizableSpace X1)
-  (hX2m : MetrizableSpace X2) : MetrizableSpace X :=",theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] [T2Space X] {X1 X2 : Set X} (hX1 : IsClosed X1) (hX2 : IsClosed X2) (hX : X = X1 ∪ X2) (hX1m : MetrizableSpace X1) (hX2m : MetrizableSpace X2) : MetrizableSpace X := sorry,True,0,1,1,0,False,True,False
+  (hX2m : MetrizableSpace X2) : MetrizableSpace X :=",theorem dummy {X : Type*} [TopologicalSpace X] [CompactSpace X] [T2Space X] {X1 X2 : Set X} (hX1 : IsClosed X1) (hX2 : IsClosed X2) (hX : X = X1 ∪ X2) (hX1m : MetrizableSpace X1) (hX2m : MetrizableSpace X2) : MetrizableSpace X := sorry,True,0,1,1,1,False,True,False
 Dummit-Foote|exercise_7_1_2,Prove that if $u$ is a unit in $R$ then so is $-u$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -9806,7 +9806,7 @@ open scoped BigOperators
   {f : ℝ → ℝ}
   (hfd : DifferentiableOn ℝ f (Ioi 0))
   (hf : Tendsto (deriv f) atTop (𝓝 0)) :
-  Tendsto (λ x => f (x + 1) - f x) atTop (𝓝 0) :=","theorem dummy {f : ℝ → ℝ} (hf : ∀ x > 0, DifferentiableAt ℝ f x) (h : Tendsto (fun x => deriv f x) atTop (𝓝 0)) : Tendsto (fun x => f (x + 1) - f x) atTop (𝓝 0) := sorry",True,0,1,1,0,True,True,True
+  Tendsto (λ x => f (x + 1) - f x) atTop (𝓝 0) :=","theorem dummy {f : ℝ → ℝ} (hf : ∀ x > 0, DifferentiableAt ℝ f x) (h : Tendsto (fun x => deriv f x) atTop (𝓝 0)) : Tendsto (fun x => f (x + 1) - f x) atTop (𝓝 0) := sorry",True,0,1,1,1,True,True,True
 brualdi_ch12_34,Prove that the complement of a disconnected graph is connected.,import Mathlib,"theorem brualdi_ch12_34 {V : Type*} (G : SimpleGraph V) (h : ¬ G.Connected) :
     Gᶜ.Connected := by sorry","theorem brualdi_ch12_34 {V : Type*} (G : SimpleGraph V) (h : ¬ G.Connected) :
     G.Connected := by sorry",False,0,0,1,0,False,False,False
@@ -9825,7 +9825,7 @@ open scoped Topology
 
 ","theorem exercise_31_1 {X : Type*} [TopologicalSpace X]
   (hX : RegularSpace X) (x y : X) (hxy : x ≠ y) :
-  ∃ (U V : Set X), IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ y ∈ V ∧ closure U ∩ closure V = ∅ :=","theorem dummy {X : Type*} [TopologicalSpace X] [RegularSpace X] {x y : X} (hxy : x ≠ y) : ∃ U V : Set X, IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ y ∈ V ∧ Disjoint (closure U) (closure V) := sorry",True,0,1,1,0,True,True,True
+  ∃ (U V : Set X), IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ y ∈ V ∧ closure U ∩ closure V = ∅ :=","theorem dummy {X : Type*} [TopologicalSpace X] [RegularSpace X] {x y : X} (hxy : x ≠ y) : ∃ U V : Set X, IsOpen U ∧ IsOpen V ∧ x ∈ U ∧ y ∈ V ∧ Disjoint (closure U) (closure V) := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_11_1_13,"Prove that as vector spaces over $\mathbb{Q}, \mathbb{R}^n \cong \mathbb{R}$, for all $n \in \mathbb{Z}^{+}$.","import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -10212,7 +10212,7 @@ Rudin|exercise_1_8,Prove that no order can be defined in the complex field that 
 open Topology Filter Real Complex TopologicalSpace Finset
 open scoped BigOperators
 
-","theorem exercise_1_8 : ¬ ∃ (r : ℂ → ℂ → Prop), IsLinearOrder ℂ r :=","theorem dummy : ¬∃ (R : LinearOrderedField ℂ), True := sorry",True,0,1,1,0,True,True,False
+","theorem exercise_1_8 : ¬ ∃ (r : ℂ → ℂ → Prop), IsLinearOrder ℂ r :=","theorem dummy : ¬∃ (R : LinearOrderedField ℂ), True := sorry",True,0,1,1,1,True,True,False
 Pugh|exercise_4_15a,"A continuous, strictly increasing function $\mu \colon (0, \infty) \rightarrow (0, \infty)$ is a modulus of continuity if $\mu(s) \rightarrow 0$ as $s \rightarrow 0$. A function $f \colon [a, b] \rightarrow \mathbb{R}$ has modulus of continuity $\mu$ if $|f(s) - f(t)| \leq \mu(|s - t|)$ for all $s, t \in [a, b]$. Prove that a function is uniformly continuous if and only if it has a modulus of continuity.","import Mathlib
 
 open Filter Real Function Set
@@ -10288,7 +10288,7 @@ open scoped Topology
   (A₀ : Set X)
   (hA : IsConnected A₀)
   (h : ∀ a, A₀ ∩ A a ≠ ∅) :
-  IsConnected (A₀ ∪ (⋃ a, A a)) :=","theorem dummy {X : Type*} [TopologicalSpace X] {A : Set X} (hA : IsConnected A) {ι : Type*} {s : ι → Set X} (hs : ∀ i, IsConnected (s i)) (h : ∀ i, (s i ∩ A).Nonempty) : IsConnected (A ∪ ⋃ i, s i) := sorry",True,0,1,1,0,True,True,True
+  IsConnected (A₀ ∪ (⋃ a, A a)) :=","theorem dummy {X : Type*} [TopologicalSpace X] {A : Set X} (hA : IsConnected A) {ι : Type*} {s : ι → Set X} (hs : ∀ i, IsConnected (s i)) (h : ∀ i, (s i ∩ A).Nonempty) : IsConnected (A ∪ ⋃ i, s i) := sorry",True,0,1,1,1,True,True,True
 Herstein|exercise_2_5_43,Prove that a group of order 9 must be abelian.,"import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -10475,7 +10475,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_2_9a {G : Type*} [Fintype G] [Group G] {p α : ℕ}
   (hp : p.Prime) (ha : α > 0) (hG : card G = p ^ α) :
-  ∀ H : Subgroup G, H.index = p → H.Normal :=","theorem dummy {G : Type*} [Group G] [Fintype G] {p : ℕ} {α : ℕ} [hp : Fact p.Prime] (hG : Fintype.card G = p ^ α) (hα : α ≠ 0) : ∀ H : Subgroup G, Subgroup.index H = p → Normal H := sorry",True,0,1,1,0,True,True,True
+  ∀ H : Subgroup G, H.index = p → H.Normal :=","theorem dummy {G : Type*} [Group G] [Fintype G] {p : ℕ} {α : ℕ} [hp : Fact p.Prime] (hG : Fintype.card G = p ^ α) (hα : α ≠ 0) : ∀ H : Subgroup G, Subgroup.index H = p → Normal H := sorry",True,0,1,1,1,True,True,True
 Rudin|exercise_1_1b,"If $r$ is rational $(r \neq 0)$ and $x$ is irrational, prove that $rx$ is irrational.","import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -10522,7 +10522,7 @@ Ireland-Rosen|exercise_3_4,Show that the equation $3 x^{2}+2=y^{2}$ has no solut
 open Real
 open scoped BigOperators
 
-","theorem exercise_3_4 : ¬ ∃ x y : ℤ, 3*x^2 + 2 = y^2 :=",theorem dummy (x y : ℤ) (h : 3 * x^2 + 2 = y^2) : False := sorry,True,0,1,1,0,True,True,True
+","theorem exercise_3_4 : ¬ ∃ x y : ℤ, 3*x^2 + 2 = y^2 :=",theorem dummy (x y : ℤ) (h : 3 * x^2 + 2 = y^2) : False := sorry,True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_8_2_4,"Let $R$ be an integral domain. Prove that if the following two conditions hold then $R$ is a Principal Ideal Domain: (i) any two nonzero elements $a$ and $b$ in $R$ have a greatest common divisor which can be written in the form $r a+s b$ for some $r, s \in R$, and (ii) if $a_{1}, a_{2}, a_{3}, \ldots$ are nonzero elements of $R$ such that $a_{i+1} \mid a_{i}$ for all $i$, then there is a positive integer $N$ such that $a_{n}$ is a unit times $a_{N}$ for all $n \geq N$.","import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -10681,7 +10681,7 @@ open scoped Topology
   {A B : Set M} (hA : IsCompact A) (hB : IsCompact B)
   (hAB : Disjoint A B) (hA₀ : A ≠ ∅) (hB₀ : B ≠ ∅) :
   ∃ a₀ b₀, a₀ ∈ A ∧ b₀ ∈ B ∧ ∀ (a : M) (b : M),
-  a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b :=","theorem dummy {M : Type*} [MetricSpace M] [Nonempty M] {A B : Set M} (hA : CompactSpace A) (hB : CompactSpace B) (hA_nonempty : A.Nonempty) (hB_nonempty : B.Nonempty) (hA_B : A ∩ B = ∅) : ∃ (a₀ : M) (b₀ : M), a₀ ∈ A ∧ b₀ ∈ B ∧ ∀ (a : M) (b : M), a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b := sorry",True,0,1,1,0,False,True,True
+  a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b :=","theorem dummy {M : Type*} [MetricSpace M] [Nonempty M] {A B : Set M} (hA : CompactSpace A) (hB : CompactSpace B) (hA_nonempty : A.Nonempty) (hB_nonempty : B.Nonempty) (hA_B : A ∩ B = ∅) : ∃ (a₀ : M) (b₀ : M), a₀ ∈ A ∧ b₀ ∈ B ∧ ∀ (a : M) (b : M), a ∈ A → b ∈ B → dist a₀ b₀ ≤ dist a b := sorry",True,0,1,1,1,False,True,True
 Shakarchi|exercise_1_13b,"Suppose that $f$ is holomorphic in an open set $\Omega$. Prove that if $\text{Im}(f)$ is constant, then $f$ is constant.","import Mathlib
 
 open Complex Filter Function Metric Finset
@@ -10717,7 +10717,7 @@ open Function Fintype Subgroup Ideal Polynomial Submodule Zsqrtd
 open scoped BigOperators
 
 ","theorem exercise_2_8_6 {G H : Type*} [Group G] [Group H] :
-  Nonempty (center (G × H) ≃* (center G) × (center H)) :=",theorem dummy {G H : Type*} [Group G] [Group H] : center (G × H) = Subgroup.prod (center G) (center H) := sorry,True,0,1,1,0,True,True,True
+  Nonempty (center (G × H) ≃* (center G) × (center H)) :=",theorem dummy {G H : Type*} [Group G] [Group H] : center (G × H) = Subgroup.prod (center G) (center H) := sorry,True,0,1,1,1,True,True,True
 brualdi_ch14_45,"Let $n$ be an odd prime number. Prove that each of the permutations, $\rho_{n}, \rho_{n}^{2}, \ldots, \rho_{n}^{n}$ of $\{1,2, \ldots, n\}$ is an $n$-cycle. (Recall that $\rho_{n}$ is the permutation that sends 1 to 2,2 to $3, \ldots, n-1$ to $n$, and $n$ to 1.)",import Mathlib,"theorem brualdi_ch14_45 {n : ℕ} (h : Odd n) (hp : Nat.Prime n) :
     ∀ i ∈ Finset.Icc 1 n, ((finRotate n) ^ i).IsCycle := by sorry","theorem brualdi_ch14_45 {n : ℕ} (h : Odd n) (hp : Nat.Prime n) :
     ∀ i ∈ Finset.Ico 1 n, ((finRotate n) ^ i).IsCycle := by sorry",False,0,0,1,0,False,False,True
@@ -11148,7 +11148,7 @@ open scoped Topology
   (hs : ∀ i, IsCompact (s i))
   (hne : ∀ i, (s i).Nonempty)
   (hs : ∀ i, (s i) ⊇ (s (i + 1))) :
-  (⋂ i, s i).Nonempty :=","theorem dummy {α : Type*} [TopologicalSpace α] [CompactSpace α] {K : ℕ → Set α} (hK : ∀ n, IsCompact (K n)) (hne : ∀ n, (K n).Nonempty) (hdec : ∀ n, K (n + 1) ⊆ K n) : (⋂ n, K n).Nonempty := sorry",True,0,1,1,0,False,False,False
+  (⋂ i, s i).Nonempty :=","theorem dummy {α : Type*} [TopologicalSpace α] [CompactSpace α] {K : ℕ → Set α} (hK : ∀ n, IsCompact (K n)) (hne : ∀ n, (K n).Nonempty) (hdec : ∀ n, K (n + 1) ⊆ K n) : (⋂ n, K n).Nonempty := sorry",True,0,1,1,1,False,False,False
 Herstein|exercise_5_3_7,"If $a \in K$ is such that $a^2$ is algebraic over the subfield $F$ of $K$, show that a is algebraic over $F$.","import Mathlib
 
 open Fintype Set Real Ideal Polynomial
@@ -11299,7 +11299,7 @@ open scoped Topology
 ","theorem exercise_30_10
   {X : ℕ → Type*} [∀ i, TopologicalSpace (X i)]
   (h : ∀ i, ∃ (s : Set (X i)), Countable s ∧ Dense s) :
-  ∃ (s : Set (Π i, X i)), Countable s ∧ Dense s :=","theorem dummy {ι : Type*} [Countable ι] {X : ι → Type*} [∀ i, TopologicalSpace (X i)] (h : ∀ i, ∃ D : Set (X i), Countable D ∧ Dense D) : ∃ D : Set (Π i, X i), Countable D ∧ Dense D := sorry",True,0,1,1,0,True,True,True
+  ∃ (s : Set (Π i, X i)), Countable s ∧ Dense s :=","theorem dummy {ι : Type*} [Countable ι] {X : ι → Type*} [∀ i, TopologicalSpace (X i)] (h : ∀ i, ∃ D : Set (X i), Countable D ∧ Dense D) : ∃ D : Set (Π i, X i), Countable D ∧ Dense D := sorry",True,0,1,1,1,True,True,True
 Munkres|exercise_21_6b,"Define $f_{n}:[0,1] \rightarrow \mathbb{R}$ by the equation $f_{n}(x)=x^{n}$. Show that the sequence $\left(f_{n}\right)$ does not converge uniformly.","import Mathlib
 
 open Filter Set TopologicalSpace
@@ -11694,7 +11694,7 @@ open Fintype Complex Polynomial LinearMap FiniteDimensional Module Module.End
 open scoped BigOperators
 
 ","theorem exercise_1_4 {F V : Type*} [AddCommGroup V] [Field F]
-  [Module F V] (v : V) (a : F): a • v = 0 → a = 0 ∨ v = 0 :=",theorem dummy {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V] (a : F) (v : V) : a • v = 0 ↔ a = 0 ∨ v = 0 := sorry,True,0,1,1,0,False,False,False
+  [Module F V] (v : V) (a : F): a • v = 0 → a = 0 ∨ v = 0 :=",theorem dummy {F : Type*} [Field F] {V : Type*} [AddCommGroup V] [Module F V] (a : F) (v : V) : a • v = 0 ↔ a = 0 ∨ v = 0 := sorry,True,0,1,1,1,False,False,False
 Artin|exercise_3_7_2,Let $V$ be a vector space over an infinite field $F$. Prove that $V$ is not the union of finitely many proper subspaces.,"import Mathlib
 
 open Function Fintype Subgroup Ideal Polynomial Submodule Zsqrtd
@@ -12044,7 +12044,7 @@ open scoped BigOperators
 ","theorem exercise_3_7_2 {K V : Type*} [Field K] [Infinite K] [AddCommGroup V]
   [Module K V] {ι : Type*} [Fintype ι] (γ : ι → Submodule K V)
   (h : ∀ i : ι, γ i ≠ ⊤) :
-  (⋃ (i : ι), (γ i : Set V)) ≠ ⊤ :=","theorem dummy {F : Type*} [Field F] [Infinite F] {V : Type*} [AddCommGroup V] [Module F V] (s : Finset (Submodule F V)) (hs : ∀ W ∈ s, W ≠ ⊤) : (⋃ W ∈ s, (W : Set V)) ≠ (⊤ : Submodule F V) := sorry",True,0,1,1,0,True,True,True
+  (⋃ (i : ι), (γ i : Set V)) ≠ ⊤ :=","theorem dummy {F : Type*} [Field F] [Infinite F] {V : Type*} [AddCommGroup V] [Module F V] (s : Finset (Submodule F V)) (hs : ∀ W ∈ s, W ≠ ⊤) : (⋃ W ∈ s, (W : Set V)) ≠ (⊤ : Submodule F V) := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_3_2_8,Prove that if $H$ and $K$ are finite subgroups of $G$ whose orders are relatively prime then $H \cap K=1$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -12341,7 +12341,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_5b
   : ∃ (E : Set ℝ) (f : ℝ → ℝ), (ContinuousOn f E) ∧
-  (¬ ∃ (g : ℝ → ℝ), Continuous g ∧ ∀ x ∈ E, f x = g x) :=","theorem dummy : ∃ (E : Set ℝ) (f : ℝ → ℝ), (ContinuousOn f E) ∧ (∀ g : ℝ → ℝ, Continuous g → ∃ x ∈ E, f x ≠ g x) := sorry",True,0,1,1,0,True,True,True
+  (¬ ∃ (g : ℝ → ℝ), Continuous g ∧ ∀ x ∈ E, f x = g x) :=","theorem dummy : ∃ (E : Set ℝ) (f : ℝ → ℝ), (ContinuousOn f E) ∧ (∀ g : ℝ → ℝ, Continuous g → ∃ x ∈ E, f x ≠ g x) := sorry",True,0,1,1,1,True,True,True
 Munkres|exercise_22_5,"Let $p \colon X \rightarrow Y$ be an open map. Show that if $A$ is open in $X$, then the map $q \colon A \rightarrow p(A)$ obtained by restricting $p$ is an open map.","import Mathlib
 
 open Filter Set TopologicalSpace
@@ -12349,7 +12349,7 @@ open scoped Topology
 
 ","theorem exercise_22_5 {X Y : Type*} [TopologicalSpace X]
   [TopologicalSpace Y] (p : X → Y) (hp : IsOpenMap p)
-  (A : Set X) (hA : IsOpen A) : IsOpenMap (p ∘ Subtype.val : A → Y) :=",theorem dummy {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (p : X → Y) (h : IsOpenMap p) (A : Set X) (hA : IsOpen A) : IsOpen (p '' A) := sorry,True,0,1,1,0,False,False,False
+  (A : Set X) (hA : IsOpen A) : IsOpenMap (p ∘ Subtype.val : A → Y) :=",theorem dummy {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y] (p : X → Y) (h : IsOpenMap p) (A : Set X) (hA : IsOpen A) : IsOpen (p '' A) := sorry,True,0,1,1,1,False,False,False
 Pugh|exercise_3_63a,Prove that $\sum 1/k(\log(k))^p$ converges when $p > 1$.,"import Mathlib
 
 open Filter Real Function
@@ -12710,7 +12710,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_21a {X : Type*} [MetricSpace X]
   (K F : Set X) (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) :
-  ∃ (δ : ℝ), δ > 0 ∧ ∀ (p q : X), p ∈ K → q ∈ F → dist p q > δ :=","theorem dummy {X : Type*} [MetricSpace X] {K F : Set X} (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) : ∃ δ : ℝ, δ > 0 ∧ ∀ (p : X) (hp : p ∈ K) (q : X) (hq : q ∈ F), dist p q ≥ δ := sorry",True,0,1,1,0,True,True,True
+  ∃ (δ : ℝ), δ > 0 ∧ ∀ (p q : X), p ∈ K → q ∈ F → dist p q > δ :=","theorem dummy {X : Type*} [MetricSpace X] {K F : Set X} (hK : IsCompact K) (hF : IsClosed F) (hKF : Disjoint K F) : ∃ δ : ℝ, δ > 0 ∧ ∀ (p : X) (hp : p ∈ K) (q : X) (hq : q ∈ F), dist p q ≥ δ := sorry",True,0,1,1,1,True,True,True
 Artin|exercise_10_6_7,Prove that every nonzero ideal in the ring of Gauss integers contains a nonzero integer.,"import Mathlib
 
 open Function Fintype Subgroup Ideal Polynomial Submodule Zsqrtd
@@ -12746,7 +12746,7 @@ open Real
 open scoped BigOperators
 
 ","theorem exercise_1_30 {n : ℕ} :
-  ¬ ∃ a : ℤ, ∑ i : Fin n, (1 : ℚ) / (n+2) = a :=","theorem dummy (n : ℕ) (hn : n ≥ 2) : ¬ ∃ k : ℤ, (∑ i in Finset.range (n + 1) \ {0, 1}, (1 : ℚ) / i) = k := sorry",True,0,1,1,0,True,True,True
+  ¬ ∃ a : ℤ, ∑ i : Fin n, (1 : ℚ) / (n+2) = a :=","theorem dummy (n : ℕ) (hn : n ≥ 2) : ¬ ∃ k : ℤ, (∑ i in Finset.range (n + 1) \ {0, 1}, (1 : ℚ) / i) = k := sorry",True,0,1,1,1,True,True,True
 Dummit-Foote|exercise_9_4_2a,Prove that $x^4-4x^3+6$ is irreducible in $\mathbb{Z}[x]$.,"import Mathlib
 
 open Fintype Subgroup Set Polynomial Ideal
@@ -12767,7 +12767,7 @@ open scoped Topology
 
 ","theorem exercise_3_1 {f : ℝ → ℝ}
   (hf : ∀ x y, |f x - f y| ≤ |x - y| ^ 2) :
-  ∃ c, f = λ x => c :=","theorem dummy (f : ℝ → ℝ) (hf : ∀ t x : ℝ, |f t - f x| ≤ |t - x|^2) : ∃ c : ℝ, ∀ x : ℝ, f x = c := sorry",True,0,1,1,0,True,True,True
+  ∃ c, f = λ x => c :=","theorem dummy (f : ℝ → ℝ) (hf : ∀ t x : ℝ, |f t - f x| ≤ |t - x|^2) : ∃ c : ℝ, ∀ x : ℝ, f x = c := sorry",True,0,1,1,1,True,True,True
 Rudin|exercise_2_27b,"Suppose $E\subset\mathbb{R}^k$ is uncountable, and let $P$ be the set of condensation points of $E$. Prove that at most countably many points of $E$ are not in $P$.","import Mathlib
 
 open Topology Filter Real Complex TopologicalSpace Finset
@@ -12890,7 +12890,7 @@ open scoped BigOperators
 
 ","theorem exercise_4_4_2 {G : Type*} [Fintype G] [CommGroup G]
   {p q : Nat.Primes} (hpq : p ≠ q) (hG : card G = p*q) :
-  IsCyclic G :=","theorem dummy {G : Type*} [Group G] [Fintype G] {p q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq : p ≠ q) (hG : Fintype.card G = p * q) (hGabelian : ∀ a b : G, a * b = b * a) : IsCyclic G := sorry",True,0,1,1,0,True,True,True
+  IsCyclic G :=","theorem dummy {G : Type*} [Group G] [Fintype G] {p q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Prime] (hpq : p ≠ q) (hG : Fintype.card G = p * q) (hGabelian : ∀ a b : G, a * b = b * a) : IsCyclic G := sorry",True,0,1,1,1,True,True,True
 Ireland-Rosen|exercise_3_10,"If $n$ is not a prime, show that $(n-1) ! \equiv 0(n)$, except when $n=4$.","import Mathlib
 
 open Real
