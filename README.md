@@ -20,7 +20,6 @@
 
 ## Артефакты на HuggingFace
 
-| --- | --- |
 | Веса обученной модели | [`AlexVav01/lean4-autoformalizer-sft`](https://huggingface.co/AlexVav01/lean4-autoformalizer-sft) |
 | Очищенный обучающий корпус (~30 тыс. пар) | [`AlexVav01/autoformalization-clean`](https://huggingface.co/datasets/AlexVav01/autoformalization-clean) |
 | Размеченный бенчмарк для оценки методов оценивания | [`AlexVav01/autoformalization-bench`](https://huggingface.co/datasets/AlexVav01/autoformalization-bench) |
