@@ -17,20 +17,17 @@ from tqdm import tqdm
 from lean_interact import AutoLeanServer, Command, LeanREPLConfig
 from lean_interact.interface import CommandResponse, LeanError, Pos, message_intersects_code
 
-# `TempRequireProject` и `clean_last_theorem_string` в разных версиях LeanInteract
-# лежат в чуть разных местах — поддерживаем оба варианта импорта.
-try:  # >= 0.9
+try:
     from lean_interact.project import TempRequireProject
-except ImportError:  # старые версии
-    from lean_interact import TempRequireProject  # type: ignore
+except ImportError:
+    from lean_interact import TempRequireProject
 
 from lean_interact.utils import clean_last_theorem_string, indent_code, split_conclusion
 
 
 # Lean/Mathlib версия влияет на результат typecheck (доступность лемм, синтаксис).
-# Значение по умолчанию совпадает с тем, что использовалось в исходных скриптах.
 DEFAULT_LEAN_VERSION = "v4.19.0"
-DEFAULT_TIMEOUT = 60  # секунд на одну команду REPL
+DEFAULT_TIMEOUT = 60
 
 # Тип метрики: получает строку датасета (dict) и сервер, возвращает результат.
 Metric = Callable[[dict, Any], Any]
@@ -256,8 +253,7 @@ def beq(
     return res[0] and res[1]
 
 
-# beq plus
-def beq_plus(
+def beq_extended(
     formalization_1: str,
     formalization_2: str,
     src_header: str,
@@ -428,9 +424,6 @@ def map_metric(
     Каждый процесс держит собственный `AutoLeanServer` (один REPL = один экземпляр
     Mathlib в памяти, поэтому число процессов ограничено объёмом RAM).
     Порядок результатов соответствует порядку `records`.
-
-    `metric` должна быть функцией верхнего уровня (picklable), например
-    `functools.partial(my_metric, prediction_column="lean4_prediction")`.
     """
     ctx = mp.get_context("spawn")
     with ctx.Pool(

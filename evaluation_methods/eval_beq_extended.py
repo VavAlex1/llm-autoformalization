@@ -16,7 +16,7 @@ from sklearn.metrics import (
 from lean_utils import (
     DEFAULT_LEAN_VERSION,
     DEFAULT_TIMEOUT,
-    beq_plus,
+    beq_extended,
     make_lean_config,
     map_metric,
 )
@@ -27,7 +27,7 @@ DEFAULT_DATASET = "AlexVav01/autoformalization-bench"
 # --------------------------------------------------------------------------- #
 # Метрика
 # --------------------------------------------------------------------------- #
-def beq_plus_metric(
+def beq_extended_metric(
     record: dict,
     server,
     formalization_column: str,
@@ -35,8 +35,7 @@ def beq_plus_metric(
     header_column: str,
     timeout: int,
 ) -> bool:
-    """Метрика для `map_metric`: эквивалентны ли эталон и предсказание по BEq+."""
-    return beq_plus(
+    return beq_extended(
         record[formalization_column],
         record[prediction_column],
         record[header_column],
@@ -157,7 +156,7 @@ def main() -> None:
 
     # 3. прогон BEq+ по всем примерам
     metric = functools.partial(
-        beq_plus_metric,
+        beq_extended_metric,
         formalization_column=args.formalization_column,
         prediction_column=args.prediction_column,
         header_column=args.header_column,
@@ -169,7 +168,7 @@ def main() -> None:
         metric,
         config,
         num_processes=args.num_processes,
-        desc="beq_plus",
+        desc="beq_extended",
     )
 
     # 4. метрики против человеческой разметки
@@ -180,7 +179,7 @@ def main() -> None:
     # 5. (опционально) сохранить разбор по примерам
     if args.output:
         df = pd.DataFrame(records)
-        df["beq_plus"] = y_pred
+        df["beq_extended"] = y_pred
         df["correct_label"] = y_true
         df.to_csv(args.output, index=False)
         print(f"Результаты по примерам сохранены в {args.output}")

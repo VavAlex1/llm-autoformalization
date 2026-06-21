@@ -1,28 +1,12 @@
 from __future__ import annotations
 
 """
-Минимальный SFT для автоформализатора (Qwen2.5-Coder-7B-Instruct).
-
 Что делает скрипт:
   * грузит HF-датасет со сплитами train (~30k) и eval (~400);
   * формирует prompt в стиле Kimina/StepFun-Formalizer, но с явным запросом
     хэдеров (модель сама генерирует хэдер + формализацию);
   * обучает обычным SFT (TRL SFTTrainer, лосс только на completion);
-  * раз в N шагов считает eval loss (даёт TRL) И метрику BEq+ на eval-сплите
-    через ту же машинерию, что и eval_beq_plus.py (lean_utils).
-
-Зависимости (на тачке с GPU и собранным Lean/Mathlib):
-    pip install "trl>=0.12" transformers datasets accelerate
-    + рядом должен лежать lean_utils.py (тот же, что использует eval_beq_plus.py)
-
-Запуск (один GPU):
-    python train_sft.py --dataset <hf_repo_id> --output-dir ./ckpt
-
-Запуск (несколько GPU, DDP):
-    accelerate launch train_sft.py --dataset <hf_repo_id> --output-dir ./ckpt
-
-Колонки датасета по умолчанию совпадают с example_samples.csv:
-    nl_statement, lean4_src_header, lean4_formalization
+  * раз в N шагов считает eval loss (даёт TRL) И метрику BEq extended на eval-сплите
 """
 
 import os, sys
@@ -113,7 +97,7 @@ def prepare_split(ds, nl_col, header_col, formal_col):
 
 
 # --------------------------------------------------------------------------- #
-# Callback: генерация на eval + BEq+
+# Callback: генерация на eval + BEq extended
 # --------------------------------------------------------------------------- #
 class LeanEvalCallback(TrainerCallback):
     """Раз в eval_steps генерирует формализации и считает Lean-метрики (typecheck, BEq+)."""
@@ -227,18 +211,15 @@ def _typecheck_metric(record, server, timeout):
 
 
 def _beq_metric(record, server, timeout):
-    from lean_utils import beq_plus
-    return beq_plus(
+    from lean_utils import beq_extended
+    return beq_extended(
         record["gold"], record["pred"], record["header"], server,
         timeout_per_proof=timeout,
     )
 
 
-# --------------------------------------------------------------------------- #
-# main
-# --------------------------------------------------------------------------- #
 def main() -> None:
-    p = argparse.ArgumentParser(description="SFT автоформализатора с typecheck/BEq+ валидацией.")
+    p = argparse.ArgumentParser(description="SFT автоформализатора с typecheck/BEq валидацией.")
     # данные / модель
     p.add_argument("--dataset", required=True, help="HF repo id со сплитами train/eval.")
     p.add_argument("--model", default="Qwen/Qwen2.5-Coder-7B-Instruct")
@@ -349,7 +330,7 @@ def main() -> None:
 
         metrics = {
             "typecheck": functools.partial(_typecheck_metric, timeout=timeout),
-            "beq_plus": functools.partial(_beq_metric, timeout=timeout),
+            "beq_extended": functools.partial(_beq_metric, timeout=timeout),
         }
 
         args._map_metric = map_metric
@@ -366,7 +347,7 @@ def main() -> None:
         callbacks=callbacks,
     )
     if lean_cb is not None:
-        lean_cb.trainer = trainer  # чтобы Lean-метрики логировались вместе с остальными
+        lean_cb.trainer = trainer
 
     # 6. обучение
     trainer.train()

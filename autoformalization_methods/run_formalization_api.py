@@ -8,18 +8,6 @@
 датасете отдельной колонкой и подаётся модели как контекст «что уже в области
 видимости»; от модели требуется только сам стейтмент БЕЗ хэдера.
 
-На выходе — CSV со всеми колонками исходного датасета плюс отдельная колонка
-`lean4_prediction` (новая формализация от модели, без хэдеров). Формат совпадает
-с тем, что ожидает LLM-судья (`nl_statement`, `lean4_formalization`,
-`lean4_prediction`), так что таблицу можно сразу подавать на оценивание.
-
-Запуск:
-    pip install openai datasets pandas
-    export OPENROUTER_API_KEY=...
-    python autoformalize.py --model "google/gemini-2.0-flash-001"
-    python autoformalize.py --model "..." --attempts 4          # pass@k: 4 строки на пример
-    python autoformalize.py --model "..." --workers 16 --limit 20
-
 Датасет: AlexVav01/FormalMath-formalization (split "train", 425 примеров).
 Колонки: id, nl_statement, lean4_src_header, lean4_formalization.
 """
@@ -54,7 +42,7 @@ FEW_SHOT_INTRO = (
 
 FEW_SHOT_TRANSITION = "\nNow formalize the following problem.\n\n"
 
-# --- Промпт автоформализатора (на английском — обычно даёт качество выше) ---- #
+
 SYSTEM_PROMPT = """\
 You are an expert in Lean 4 and Mathlib, specializing in AUTOFORMALIZATION:
 translating natural-language mathematical statements into precise, compilable
@@ -115,7 +103,6 @@ def build_user_content(nl, header, name, few_shot):
     return FEW_SHOT_INTRO + FEW_SHOT_BLOCK.strip() + FEW_SHOT_TRANSITION + problem
 
 
-# --- Вспомогательные функции ----------------------------------------------- #
 def extract_lean(text):
     """Вытащить Lean-код из ответа модели."""
     m = re.search(r"```lean4?\s*(.*?)```", text, re.S | re.I)
@@ -128,10 +115,9 @@ def extract_lean(text):
 
 
 def strip_header_lines(code):
-    """Убрать ведущие import/open-строки из ответа модели.
-
-    Хэдер уже есть в датасете и не должен дублироваться в предсказании; если
-    модель всё-таки его повторила — отрезаем, чтобы хранить стейтмент без хэдера.
+    """
+    Убрать ведущие import/open-строки из ответа модели.
+    Хэдер уже есть в датасете и не должен дублироваться в предсказании
     """
     lines = code.splitlines()
     i = 0
@@ -142,8 +128,8 @@ def strip_header_lines(code):
 
 
 def formalize_one(client, model, row, attempts, temperature, max_tokens, few_shot):
-    """Сгенерировать `attempts` формализаций одного примера.
-
+    """
+    Сгенерировать `attempts` формализаций одного примера.
     Возвращает (preds, prompt_text, raws):
       - preds: список Lean-кандидатов (только стейтмент, без хэдера);
       - prompt_text: то, что отправили модели (system + user);
@@ -174,7 +160,6 @@ def formalize_one(client, model, row, attempts, temperature, max_tokens, few_sho
 
 
 def print_summary(df):
-    """Короткая сводка по сгенерированным предсказаниям."""
     n = len(df)
     nonempty = df["lean4_prediction"].fillna("").str.strip().ne("").sum()
     has_sorry = df["lean4_prediction"].fillna("").str.contains("sorry").sum()
@@ -186,7 +171,6 @@ def print_summary(df):
     print(f"ошибок API:             {errors}")
 
 
-# --- индикатор прогресса --------------------------------------------------- #
 def progress_iter(futures_as_completed, total):
     """Обёртка с прогресс-баром tqdm, либо простой счётчик, если tqdm нет."""
     try:
@@ -271,15 +255,14 @@ def main():
     for i, row in enumerate(rows):
         preds, prompt, raws = results[i]
         for k in range(len(preds)):
-            rec = {col: row.get(col) for col in original_cols}  # все колонки датасета
-            rec["lean4_prediction"] = preds[k]                  # новая формализация (без хэдера)
+            rec = {col: row.get(col) for col in original_cols}
+            rec["lean4_prediction"] = preds[k]
             rec["attempt"] = k + 1
             rec["prompt"] = prompt
             rec["raw_output"] = raws[k]
             records.append(rec)
 
     df = pd.DataFrame(records)
-    # порядок колонок: сначала исходные, затем добавленные
     df = df[original_cols + ["lean4_prediction", "attempt", "prompt", "raw_output"]]
     df.to_csv(args.output, index=False)
     print(f"\nФормализации сохранены в {args.output}")
